@@ -27,6 +27,9 @@ class MaxFlow {
     ArrayList<Answer> answers = new ArrayList<>(); // økning og flytøkende vei for graf
     int maxFlow;
 
+    /**
+     * Leser graph
+     */
     public static Node[] newGraph(String filePath) throws IOException {
 
         BufferedReader br = new BufferedReader(new FileReader(new File(filePath)));
@@ -62,7 +65,6 @@ class MaxFlow {
         return nodes;
     }
 
-
     void edmondsKarp(int source, int sink, Node[] graph) {
 
         maxFlow = 0;
@@ -80,7 +82,10 @@ class MaxFlow {
 
                 for (Edge e : current.edges) {
                     if (flowPath[e.to] == null && e.to != source && e.capacity > e.flow) {
+
+                        // lagrer flowpath til bfs slik at man kan jobbe med det senere
                         flowPath[e.to] = e;
+
                         queue.add(graph[e.to]);
                     }
                 }
@@ -90,25 +95,28 @@ class MaxFlow {
                 break; // sink is not reached
             }
 
+            // increase in flow
             int pushFlow = Integer.MAX_VALUE;
 
             // max flow
             for (Edge e = flowPath[sink]; e != null; e = flowPath[e.from])
                 pushFlow = Math.min(pushFlow, e.capacity - e.flow);
 
+            // Stores answer from one bfs search
             Answer answer = new Answer();
             answer.okning = pushFlow;
             answer.kanter = new LinkedList<>();
-
             answer.kanter.add(sink);
+
+            // update flow for edges in flowpath
             for (Edge e = flowPath[sink]; e != null; e = flowPath[e.from]) {
                 e.flow += pushFlow;
                 e.reverseEdge.flow -= pushFlow;
                 answer.kanter.addFirst(e.from);
 
             }
-            answers.add(answer);
 
+            answers.add(answer);
             maxFlow += pushFlow;
 
         }
