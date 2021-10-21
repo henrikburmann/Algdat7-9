@@ -102,6 +102,7 @@ class MaxFlow {
             for (Edge e = flowPath[sink]; e != null; e = flowPath[e.from])
                 pushFlow = Math.min(pushFlow, e.capacity - e.flow);
 
+
             // Stores answer from one bfs search
             Answer answer = new Answer();
             answer.okning = pushFlow;
@@ -112,6 +113,7 @@ class MaxFlow {
             for (Edge e = flowPath[sink]; e != null; e = flowPath[e.from]) {
                 e.flow += pushFlow;
                 e.reverseEdge.flow -= pushFlow;
+
                 answer.kanter.addFirst(e.from);
 
             }
