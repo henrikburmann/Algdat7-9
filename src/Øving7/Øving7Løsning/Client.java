@@ -1,4 +1,3 @@
-package Øving7.Øving7Løsning;
 
 import java.io.BufferedReader;
 import java.io.File;
