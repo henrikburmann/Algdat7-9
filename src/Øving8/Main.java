@@ -15,10 +15,12 @@ public class Main {
 
     public static void compressDocument(String path, String outPath) {
         LZ78 lz78 = new LZ78();
-
         byte[] compressed = lz78.compress(path);
-        File file = new File(outPath);
 
+
+
+        System.out.println("Komprimert lengde: " + compressed.length);
+        File file = new File("src/Øving8/files/opg8-2021.pdf");
 
     }
 }

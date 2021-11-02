@@ -30,15 +30,14 @@ public class LZ78 {
         try {
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             String content = new String(bytes);
-            System.out.println(content);
             data = content.toCharArray();
+            System.out.println("ukomprimert lendgde: " + data.length);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public byte[] compress(String filePath) {
-
         fileToByteArray(filePath); // fills data-array with byte stream
         ArrayList<Byte> compressed = new ArrayList<>();
 
@@ -98,7 +97,6 @@ public class LZ78 {
      */
     private Pointer findPointer(int index) {
         Pointer pointer = new Pointer();
-
         int max = index + POINTERSIZE;
         if (max > data.length-1) {
             max = data.length-1;
@@ -127,13 +125,14 @@ public class LZ78 {
                     pointer.setDistance(buffer.length - j);
                     pointer.setLength(searchWord.length);
                     i++;
-                    continue outer;
+                    continue outer; // continues loop with additional character in search word until it fails.
+
                 } else {
                     int l = k-1; // last index of failed character from buffer in the search word if any
                     while (l >= 0 && searchWord[l] != buffer[j+k]) {
                         l--;
                     }
-                    j += k-1; // slide scope acording to Boyer Moore
+                    j += k-l; // slide scope acording to Boyer Moore
                 }
             }
             break; // No match found for the last search word
@@ -152,10 +151,12 @@ public class LZ78 {
      */
     public void deCompress(byte[] bytes, String decompPath) {
 
+
+
+
+
+
     }
-
-
-
 
     /**
      * Pointer that references back to re-occuring streams?
@@ -190,10 +191,5 @@ public class LZ78 {
         public int getDistance() {
             return distance;
         }
-    }
-
-
-    public static void main(String[] args) {
-
     }
 }
