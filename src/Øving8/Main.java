@@ -1,9 +1,24 @@
 package Øving8;
 
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello friend");
-        System.out.println("hello friend that's lame, maybe i should give you a name");
-        System.out.println("but that's a slippery slope, you are only in my head we have to remember that");
+
+        String filePath = "src/Øving8/files/opg8-2021.pdf";
+        String compressedPath = "src/Øving8/files/compressed.pdf";
+
+        compressDocument(filePath, compressedPath);
+
+
+    }
+
+    public static void compressDocument(String path, String outPath) {
+        LZ78 lz78 = new LZ78();
+
+        byte[] compressed = lz78.compress(path);
+        File file = new File(outPath);
+
+
     }
 }

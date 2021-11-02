@@ -26,9 +26,9 @@ public class LZ78 {
     /**
      * @return character array
      */
-    public void fileToByteArray() {
+    public void fileToByteArray(String filePath) {
         try {
-            byte[] bytes = Files.readAllBytes(Paths.get("src/Øving8/files/opg8-2021.pdf"));
+            byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             String content = new String(bytes);
             System.out.println(content);
             data = content.toCharArray();
@@ -37,14 +37,58 @@ public class LZ78 {
         }
     }
 
-    public Byte[] compress(String filePath) {
+    public byte[] compress(String filePath) {
 
-        fileToByteArray(); // fills data array with bytes
+        fileToByteArray(filePath); // fills data-array with byte stream
         ArrayList<Byte> compressed = new ArrayList<>();
 
+        StringBuilder incompressible = new StringBuilder();
 
-        return null;
+        for (int i = 0; i < data.length ; i++) {
 
+            Pointer pointer = findPointer(i); // pointer for current look ahead buffer
+            if (pointer != null) { // pointer not found
+                if (incompressible.length() != 0) {
+                    compressed.add((byte) incompressible.length());
+                    for (int j = 0; j < incompressible.length() ; j++) {
+                        compressed.add((byte) incompressible.charAt(j));
+                    }
+                    incompressible = new StringBuilder(); // new clean and empty stringbuilder
+                }
+
+                compressed.add((byte) ((pointer.getDistance() >> 4) | (1 << 7)));
+                compressed.add((byte) ((pointer.getDistance() & 0x0F) << 4 | (pointer.getLength() -1)));
+                i += pointer.getLength();
+
+            }else {
+                incompressible.append(data[i]);
+
+                if (incompressible.length() == 127) {
+                    compressed.add((byte)(incompressible.length()));
+                    for (int j = 0; j < incompressible.length() ; j++) {
+                        compressed.add((byte) incompressible.charAt(j));
+                    }
+                }
+                i += 1;
+            }
+        }
+
+        if (incompressible.length() != 0) {
+            compressed.add((byte) (incompressible.length())); // length of sequnce of inconpressible bytes
+            for (int i = 0; i < incompressible.length() ; i++) {
+                compressed.add((byte) incompressible.charAt(i));
+            }
+        }
+
+        return toByteArray(compressed); // return compressed array
+    }
+
+    public byte[] toByteArray(ArrayList<Byte> arrayList) {
+        byte[] array = new byte[arrayList.size()];
+        for (int i = 0; i < arrayList.size() ; i++) {
+            array[i] = arrayList.get(i);
+        }
+        return array;
     }
 
     /**
@@ -101,10 +145,11 @@ public class LZ78 {
         return null; // no match
     }
 
-
-
-
-
+    /**
+     *
+     * @param bytes
+     * @param decompPath
+     */
     public void deCompress(byte[] bytes, String decompPath) {
 
     }
