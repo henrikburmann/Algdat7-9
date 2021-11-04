@@ -47,6 +47,7 @@ public class LZ78 {
         for (int i = 0; i < data.length ; i++) {
 
             Pointer pointer = findPointer(i); // pointer for current look ahead buffer
+
             if (pointer != null) { // pointer not found
                 if (incompressible.length() != 0) {
                     compressed.add((byte) incompressible.length());
