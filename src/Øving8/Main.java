@@ -1,26 +1,25 @@
 package Øving8;
 
-import java.io.File;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         String filePath = "src/Øving8/files/opg8-2021.pdf";
-        String compressedPath = "src/Øving8/files/compressed.pdf";
+        String compressedPath = "src/Øving8/files/compressed.txt";
 
-        compressDocument(filePath, compressedPath);
+        byte[] compressed = compressDocument(filePath);
+        System.out.println("de-komprimert lengde: " + compressed.length);
 
+        LZ78 lz78 = new LZ78();
+
+        lz78.deCompress(compressed, compressedPath);
 
     }
 
-    public static void compressDocument(String path, String outPath) {
+    public static byte[] compressDocument(String path) {
         LZ78 lz78 = new LZ78();
         byte[] compressed = lz78.compress(path);
-
-
-
-        System.out.println("Komprimert lengde: " + compressed.length);
-        File file = new File("src/Øving8/files/opg8-2021.pdf");
-
+        return compressed;
     }
 }

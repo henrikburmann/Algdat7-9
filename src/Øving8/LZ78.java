@@ -1,6 +1,6 @@
 package Øving8;
 
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ public class LZ78 {
             byte[] bytes = Files.readAllBytes(Paths.get(filePath));
             String content = new String(bytes);
             data = content.toCharArray();
+            System.out.println(content);
             System.out.println("ukomprimert lendgde: " + data.length);
         } catch (IOException e) {
             e.printStackTrace();
@@ -98,6 +99,7 @@ public class LZ78 {
     private Pointer findPointer(int index) {
         Pointer pointer = new Pointer();
         int max = index + POINTERSIZE;
+
         if (max > data.length-1) {
             max = data.length-1;
         }
@@ -149,12 +151,41 @@ public class LZ78 {
      * @param bytes
      * @param decompPath
      */
-    public void deCompress(byte[] bytes, String decompPath) {
+    public void deCompress(byte[] bytes, String decompPath) throws IOException {
 
+        DataOutputStream output = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(decompPath)));
 
+        ArrayList<Byte> b = new ArrayList<>();
+        int currentIndex = 0;
 
+        int i = 0;
 
+        while (i < bytes.length-1) {
+            byte condition = bytes[i];
+            if (condition >= 0) {
+                // condition = number of uncompressed bytes
+                for (int j = 0; j < condition ; j++) {
+                    b.add(bytes[i+j+1]);
+                }
+                currentIndex += condition;
+                i += condition + 1;
+            }
+            else {
+                int jump = ((condition & 127) << 4) | ((bytes[i+1] >> 4) & 15);
+                int length = (bytes[i+1] & 0x0F) + 1;
 
+                for (int j = 0; j < length ; j++) {
+                    b.add(b.get(currentIndex - jump + j));
+                }
+                currentIndex += length;
+                i+= 2;
+            }
+        }
+        for (int j = 0; j < currentIndex ; j++) {
+            output.write(b.get(i));
+        }
+        output.flush();
+        output.close();
 
     }
 
