@@ -56,7 +56,7 @@ public class test_LZ78 {
         // begynner med å gå gjennom bytes array
         for (int i = 0; i < bytesInput.length ; i++) {
 
-            List<Byte> bytes = new ArrayList<>(); // bytes to be analyzed
+            ArrayList<Byte> bytes = new ArrayList<>(); // bytes to be analyzed
 
             boolean repeatedWordFound = false; // if repeated wrod to be compressed is found
 
@@ -70,7 +70,7 @@ public class test_LZ78 {
 
                 // size of list needs to be...
                 if (bytes.size() >= LENGTH_SEARCH_WORD) {
-                    int compressLocation = findMatch(bytesInput, j); // todo: skrive denne metoden...
+                    int compressLocation = findMatch(bytes, j); // todo: skrive denne metoden...
 
                     // Hva må jeg gjøre nu som jeg har funnet lokasjonen??
                 }
@@ -84,20 +84,57 @@ public class test_LZ78 {
     /**
      *
      * @param input
-     * @param index
-     * @return index if found, 0 if no matching byte sequnce is found
+     * @param indexStart
+     * @return index if found, -1 if no matching byte sequnce is found
      *
      * todo: står på en index og må søke bakover i input
      * Hvor langt skal jeg søke bakover??
      * lengde på søkeord jeg skal matche med??
      *
      */
-    public int findMatch(byte[] input, int index) {
+    public int findMatch(ArrayList<Byte> input, int indexStart) {
 
+        int lookbackIndex = indexStart - SIZE_LOOKING_BACK;
+        int distanceBack = SIZE_LOOKING_BACK;
 
+        if (lookbackIndex < 0) { // if lookbackindex goes beyond startindex
+            lookbackIndex = 0;
+            distanceBack = indexStart;
+        }
 
+        int returnindex = -1;
+        boolean found = false; // true if found matching byte sequnce
 
-        return 0;
+        // iterate through list of bytes to be analyzed
+
+        for (int i = lookbackIndex; i < lookbackIndex + distanceBack ; i++) {
+
+            found = true; // trenger jeg denne??
+            int index = 0; // index we starter å lete på i input
+
+            for (int j = 0; j < input.size() ; j++) {
+
+                if (bytesInput[i+j] != input.get(indexStart)) {
+                    found = false; // if iterated over and not found
+                    break; // then we break out of loop
+                }
+
+                if (j == 0) {
+                    returnindex = j+i;
+                }
+                index++;
+            }
+            // We have reached the end of input, break out of loop then
+            if (index == input.size()) {
+                break;
+            }
+
+            if (found) {
+                return returnindex;
+            }
+
+        }
+        return returnindex; // will return -1 if matching bytesequence is not found
     }
 
 
