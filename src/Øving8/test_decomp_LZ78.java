@@ -1,2 +1,8 @@
-package Øving8;public class test_decomp_LZ78 {
+package Øving8;
+
+public class test_decomp_LZ78 {
+
+
+
+
 }

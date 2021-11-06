@@ -3,8 +3,8 @@ package Øving8;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 
 public class test_LZ78 {
     /*
@@ -38,7 +38,12 @@ public class test_LZ78 {
     }
 
     public void fillBytesInput() throws IOException {
+
         bytesInput = Files.readAllBytes(inputfile.toPath());
+
+        System.out.println(bytesInput.length);
+        bytesCompressed = new byte[bytesInput.length];
+
     }
 
     /**
@@ -51,14 +56,16 @@ public class test_LZ78 {
     public void compressFile() {
 
         int compressedListIndex = 0;
-        // int bytesDone;
+        int bytesDone = 0;
+        int compressIndex = -1; // initialized value out of scope
+
 
         // begynner med å gå gjennom bytes array
         for (int i = 0; i < bytesInput.length ; i++) {
 
             ArrayList<Byte> bytes = new ArrayList<>(); // bytes to be analyzed
 
-            boolean repeatedWordFound = false; // if repeated wrod to be compressed is found
+            boolean repeatedSequnceFound = false; // if repeated wrod to be compressed is found
 
             int lengthCompress = -1;
             int match = 0;
@@ -72,12 +79,88 @@ public class test_LZ78 {
                 if (bytes.size() >= LENGTH_SEARCH_WORD) {
                     int compressLocation = findMatch(bytes, j); // todo: skrive denne metoden...
 
-                    // Hva må jeg gjøre nu som jeg har funnet lokasjonen??
-                }
+                    if (compressLocation >= 0) { // we have found location with repeating sequence
 
+                        repeatedSequnceFound = true; //
+                        compressIndex = i;
+                        match = compressLocation;
+                        lengthCompress = bytes.size();
+
+                    } else {
+                        break; // not found any matching bytes sequnce
+                    }
+                }
             }
 
+            if (repeatedSequnceFound) {
 
+                // amount of bytes that could not be compressed
+                int notCompressed = compressIndex - bytesDone;
+
+                // adds a byte that counts amount of bytes which is not compressed. minus in front.
+                // increase based on wich index we are on in bytesCompressed list.
+                if (!(bytesCompressed.length <= compressedListIndex)) {
+                    bytesCompressed[compressedListIndex] = (byte) -notCompressed;
+                    compressedListIndex++;
+                }
+
+                // loops and add bytes that could not be compressed
+                for (int j = bytesDone; j < compressIndex ; j++) {
+                    if (bytesCompressed.length <= compressedListIndex || bytesInput.length <= j) {
+                        break;
+                    }
+                    bytesCompressed[compressedListIndex] = bytesInput[j];
+                    compressedListIndex++;
+                }
+
+                // how far back and to find compression and the leght of the retrival
+                if (!(bytesCompressed.length <= compressedListIndex)) {
+                    bytesCompressed[compressedListIndex] = (byte) (compressIndex - match);
+                    compressedListIndex++;
+                    bytesCompressed[compressedListIndex] = (byte) lengthCompress;
+                    compressedListIndex++;
+                }
+
+                bytesDone = compressIndex + lengthCompress;
+
+                i += lengthCompress;
+            }
+        }
+
+        int notCompressed = bytesInput.length - bytesDone;
+
+        // have to add all the bytes that were not compressed
+        if (compressedListIndex < bytesCompressed.length) {
+            bytesCompressed[compressedListIndex] = (byte) -notCompressed;
+            compressedListIndex++;
+        }
+
+        byte[] buffer = bytesCompressed;
+
+        // fix by placing it in its own method
+        fixEmptyBufferSize(buffer, compressedListIndex);
+
+/*
+        // fix empty buffer bytes
+        bytesCompressed = new byte[compressedListIndex];
+        for (int i = 0; i < buffer.length ; i++) {
+            bytesCompressed[i] = buffer[i];
+        }
+
+ */
+
+        try {
+            Files.write(Paths.get(outputfile.getPath()), bytesCompressed);
+            System.out.println("here it should write to output");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void fixEmptyBufferSize(byte[] buffer, int bufferLength) {
+        bytesCompressed = new byte[bufferLength];
+        for (int i = 0; i < bufferLength ; i++) {
+            bytesCompressed[i] = buffer[i];
         }
     }
 
@@ -114,7 +197,10 @@ public class test_LZ78 {
 
             for (int j = 0; j < input.size() ; j++) {
 
-                if (bytesInput[i+j] != input.get(indexStart)) {
+
+                //System.out.print("input size(): " + input.size());
+                //System.out.println(" indexStart: " + indexStart);
+                if (bytesInput[i+j] != input.get(index)) {
                     found = false; // if iterated over and not found
                     break; // then we break out of loop
                 }
@@ -137,5 +223,17 @@ public class test_LZ78 {
         return returnindex; // will return -1 if matching bytesequence is not found
     }
 
+    public static void main(String[] args) throws IOException {
 
+        File fileIn = new File(String.valueOf(Paths.get("src/Øving8/files/opg8-2021.pdf")));
+        String out = "src/Øving8/files/compressed.txt";
+        File fileOut = new File(out);
+
+        if (fileOut.exists()) {
+            fileOut.delete();
+            fileOut = new File(out);
+        }
+        test_LZ78 test = new test_LZ78(fileIn, fileOut);
+        test.compressFile();
+    }
 }
