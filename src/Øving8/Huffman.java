@@ -20,7 +20,6 @@ public class Huffman {
         freq = frequencyTable(fileIn);
         bitStrings = new String[freq.length];
         lookUpTable(root, "");
-        writeToOutputFile(fileOut, );
     }
 
     public int compress(byte[] compressedBytes, String outPath) throws IOException {
