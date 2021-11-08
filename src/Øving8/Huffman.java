@@ -54,6 +54,7 @@ public class Huffman {
             int freq = input.readInt();
             frequencies[i] = freq;
         }
+
         ArrayList<Byte> out = new ArrayList<>();
 
         int lastByte = input.readInt();
