@@ -3,6 +3,7 @@ package Øving8;
 import java.io.IOException;
 
 public class Main {
+
     public static void main(String[] args) throws IOException {
 
         String filePath = "src/Øving8/files/opg8-2021.pdf";
