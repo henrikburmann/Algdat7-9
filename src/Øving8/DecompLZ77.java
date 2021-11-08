@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class test_decomp_LZ78 {
+public class DecompLZ77 {
 
     private File inFile;
     private File outFile;
@@ -20,7 +20,7 @@ public class test_decomp_LZ78 {
     private int bytesLeft;
     private int outputIndex;
 
-    public test_decomp_LZ78(File inFile, File outFile) throws IOException {
+    public DecompLZ77(File inFile, File outFile) throws IOException {
         this.inFile = inFile;
         this.outFile = outFile;
         this.byteInFile = new byte[0];
@@ -130,7 +130,7 @@ public class test_decomp_LZ78 {
             fileOut.delete();
             fileOut = new File(out);
         }
-        test_decomp_LZ78 test = new test_decomp_LZ78(fileIn, fileOut);
+        DecompLZ77 test = new DecompLZ77(fileIn, fileOut);
         test.decompress();
 
     }

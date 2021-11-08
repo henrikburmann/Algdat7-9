@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class test_LZ78 {
+public class CompLZ77 {
     /*
     TODO: dictonary (størrelse = ?)
         distanse for å se tilbake = ?
@@ -28,7 +28,7 @@ public class test_LZ78 {
     private final int SIZE_LOOKING_BACK = 127;
     private final int LENGTH_SEARCH_WORD = 4;
 
-    public test_LZ78(File inputfile, File outputfile) throws IOException {
+    public CompLZ77(File inputfile, File outputfile) throws IOException {
         this.inputfile = inputfile;
         this.outputfile = outputfile;
         this.bytesInput = new byte[0];
@@ -236,7 +236,7 @@ public class test_LZ78 {
             fileOut.delete();
             fileOut = new File(out);
         }
-        test_LZ78 test = new test_LZ78(fileIn, fileOut);
+        CompLZ77 test = new CompLZ77(fileIn, fileOut);
         test.compressFile();
 
         // test for å se om den komprimerte riktig
