@@ -23,6 +23,4 @@ public class Main {
         skrivUt(n.leftChild);
         skrivUt(n.rightChild);
     }
-
-
-}
+}  
