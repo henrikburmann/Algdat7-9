@@ -54,7 +54,7 @@ public class DecompLZ77 {
 
                     byteOutFile[outputIndex] = byteInFile[inputIndex];
                 }
-            } else { // if the number is negative, no compression
+            } else { // if the number is negative, compression
                 if (byteInFile.length <= inputIndex) {
                     break;
                 }
@@ -76,7 +76,7 @@ public class DecompLZ77 {
             setBytesLeft();
         }
         trimOutputArray();
-        writeToFile();
+        writeToFile(); // bug??
     }
 
     public void setBytesLeft() {
@@ -86,7 +86,6 @@ public class DecompLZ77 {
     public void readInputFile() throws IOException {
         byteInFile = Files.readAllBytes(inFile.toPath());
         String in = new String(byteInFile);
-        System.out.println(in);
         int length = (int) (byteInFile.length * 1.75);
         // maybe we need to expand size of output array??
         byteOutFile = new byte[length];
@@ -111,10 +110,12 @@ public class DecompLZ77 {
         byteOutFile = temp;
     }
 
+    /**
+    * call at end of decompress()
+     */
     public void writeToFile() throws IOException {
         BufferedWriter outputWriter = new BufferedWriter(new FileWriter(outFile.getPath()));
         String x = new String(byteOutFile, StandardCharsets.UTF_8);
-        System.out.println(x); // ja funker ikke helt som det skal
         outputWriter.write(x);
         outputWriter.flush();
         outputWriter.close();
@@ -122,8 +123,8 @@ public class DecompLZ77 {
 
     public static void main(String[] args) throws IOException {
 
-        File fileIn = new File(String.valueOf(Paths.get("src/Øving8/test_files/compressed_test.txt")));
-        String out = "src/Øving8/test_files/decompressed_test.txt";
+        File fileIn = new File(String.valueOf(Paths.get("src/Øving8/files/compressed.txt")));
+        String out = "src/Øving8/files/decompressed.txt";
         File fileOut = new File(out);
 
         if (fileOut.exists()) {
@@ -132,9 +133,5 @@ public class DecompLZ77 {
         }
         DecompLZ77 test = new DecompLZ77(fileIn, fileOut);
         test.decompress();
-
     }
-
-
-
 }

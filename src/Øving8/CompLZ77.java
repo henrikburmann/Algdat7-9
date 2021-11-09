@@ -15,7 +15,6 @@ public class CompLZ77 {
 
         - bytes fra input fil
         - lagrer compressed bytes i output fil
-
      */
 
     private File inputfile;
@@ -95,7 +94,6 @@ public class CompLZ77 {
 
             // System.out.println(repeatedSequnceFound);
             if (repeatedSequnceFound) {
-                System.out.println("funnet gjentatt sekvens");
 
                 // amount of bytes that could not be compressed
                 int notCompressed = compressIndex - bytesDone;
@@ -151,14 +149,6 @@ public class CompLZ77 {
         fixEmptyBufferSize(buffer, compressedListIndex);
 
         writeFile();
-        /*
-        try {
-            Files.write(Paths.get(outputfile.getPath()), bytesCompressed);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-         */
     }
 
     public void fixEmptyBufferSize(byte[] buffer, int bufferLength) {
@@ -198,7 +188,7 @@ public class CompLZ77 {
 
         for (int i = lookbackIndex; i < lookbackIndex + distanceBack; i++) {
 
-            found = true; // trenger jeg denne??
+            found = true;
             int index = 0; // index we starter å lete på i input
 
             for (int j = 0; j < input.size(); j++) {
@@ -228,8 +218,9 @@ public class CompLZ77 {
 
     public static void main(String[] args) throws IOException {
 
-        File fileIn = new File(String.valueOf(Paths.get("src/Øving8/test_files/test.txt")));
-        String out = "src/Øving8/test_files/compressed_test.txt";
+        File fileIn = new File(String.valueOf(Paths.get("src/Øving8/files/notcompressed.txt")));
+
+        String out = "src/Øving8/files/compressed.txt";
         File fileOut = new File(out);
 
         if (fileOut.exists()) {
@@ -238,11 +229,6 @@ public class CompLZ77 {
         }
         CompLZ77 test = new CompLZ77(fileIn, fileOut);
         test.compressFile();
-
-        // test for å se om den komprimerte riktig
-        byte[] yo = Files.readAllBytes(Paths.get("src/Øving8/test_files/decompressed_test.txt"));
-        String s = new String(yo, StandardCharsets.UTF_8); // den funker!!
-
 
     }
 }
