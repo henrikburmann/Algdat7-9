@@ -7,15 +7,15 @@ import java.nio.file.Files;
 public class Main {
     public static void main(String[] args) throws IOException, IOException {
 
-        File test = new File("src/Øving8/test_files/test.txt"); // fil som skal komprimeres
+        File test = new File("test.txt"); // fil som skal komprimeres
 
-        File LZ77Comp = new File("src/Øving8/test_files/compressed_test.txt"); // fil komprimert med lebel ziv
+        File LZ77Comp = new File("compressed_test.txt"); // fil komprimert med lebel ziv
 
-        File HuffmanComp = new File("src/Øving8/test_files/huffmanComp.txt"); // fil komprimert videre med huffman
+        File HuffmanComp = new File("huffmanComp.txt"); // fil komprimert videre med huffman
 
-        File HuffmanDecomp = new File("src/Øving8/test_files/huffmanDecomp" + // fil dekomprimert med huffman
+        File HuffmanDecomp = new File("huffmanDecomp" + // fil dekomprimert med huffman
                 ".txt");
-        File LZ77Decomp = new File("src/Øving8/test_files/decompressed_test" + // fil decomprimert med lebel ziv, skal være lik test.txt
+        File LZ77Decomp = new File("decompressed_test" + // fil decomprimert med lebel ziv, skal være lik test.txt
                 ".txt");
 
         CompLZ77 compLZ77 = new CompLZ77(test, LZ77Comp);
