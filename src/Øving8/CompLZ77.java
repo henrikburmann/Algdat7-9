@@ -215,20 +215,4 @@ public class CompLZ77 {
 
         return -1; // if no match
     }
-
-    public static void main(String[] args) throws IOException {
-
-        File fileIn = new File(String.valueOf(Paths.get("src/Øving8/files/notcompressed.txt")));
-
-        String out = "src/Øving8/files/compressed.txt";
-        File fileOut = new File(out);
-
-        if (fileOut.exists()) {
-            fileOut.delete();
-            fileOut = new File(out);
-        }
-        CompLZ77 test = new CompLZ77(fileIn, fileOut);
-        test.compressFile();
-
-    }
 }

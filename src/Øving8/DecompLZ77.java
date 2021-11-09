@@ -120,18 +120,4 @@ public class DecompLZ77 {
         outputWriter.flush();
         outputWriter.close();
     }
-
-    public static void main(String[] args) throws IOException {
-
-        File fileIn = new File(String.valueOf(Paths.get("src/Øving8/files/compressed.txt")));
-        String out = "src/Øving8/files/decompressed.txt";
-        File fileOut = new File(out);
-
-        if (fileOut.exists()) {
-            fileOut.delete();
-            fileOut = new File(out);
-        }
-        DecompLZ77 test = new DecompLZ77(fileIn, fileOut);
-        test.decompress();
-    }
 }
