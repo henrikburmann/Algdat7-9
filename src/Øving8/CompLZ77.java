@@ -21,8 +21,8 @@ public class CompLZ77 {
     private File inputfile;
     private File outputfile; // komprimert skal sendes til denne
 
-    private byte[] bytesInput;
-    private byte[] bytesCompressed;
+    byte[] bytesInput;
+    byte[] bytesCompressed;
 
     // Defines looking back size and search word size
     private final int SIZE_LOOKING_BACK = 127;

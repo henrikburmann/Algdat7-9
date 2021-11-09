@@ -1,4 +1,4 @@
-package Øving8;
+
 
 import java.io.*;
 import java.nio.file.Files;
@@ -8,18 +8,19 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.zip.DataFormatException;
 
-public class Huffman {
+public class HuffmanHenrik {
     private List<Byte> bytes;
     private static int ARRAY_SIZE = 256;
-    HuffmanNode root;
+    HuffmanNodeHenrik root;
     static String[] bitStrings;
     static int[] freq;
     DataOutputStream out;
 
-    public Huffman(File fileIn, File fileOut) throws IOException {
+    public HuffmanHenrik(File fileIn, File fileOut) throws IOException {
         bytes = new ArrayList<>();
-        freq = frequencyTable(fileIn);
-        bitStrings = new String[freq.length];
+        freq = new int[ARRAY_SIZE];
+
+        bitStrings = new String[ARRAY_SIZE];
     }
 
     public int compress(byte[] compressedBytes, String outPath) throws IOException {
@@ -30,22 +31,31 @@ public class Huffman {
             }
             else freq[b] ++;
         }
-
+        root = huffmanTree(freq);
         lookUpTable(root, "");
         writeToOutputFile(outPath, compressedBytes);
-        root = huffmanTree(freq);
+
         return out.size();
     }
 
-    private static ArrayList<HuffmanNode> makeNodeList(int[] frequencies){
-        ArrayList<HuffmanNode> nodeList = new ArrayList<>();
+    private static ArrayList<HuffmanNodeHenrik> makeNodeList(int[] frequencies){
+        ArrayList<HuffmanNodeHenrik> nodeList = new ArrayList<>();
         for (int i = 0; i < frequencies.length; i++) {
             if (frequencies[i] != 0){
-                nodeList.add(new HuffmanNode((char) i, frequencies[i], null,
+                nodeList.add(new HuffmanNodeHenrik((char) i, frequencies[i], null,
                         null));
             }
         }
         return nodeList;
+    }
+    private static int[] readFrequencyArray(File file) throws IOException {
+        FileReader myReader = new FileReader(file.getPath());
+        int[] frequencyArray = new int[ARRAY_SIZE + 1];
+        for (int i = 0; i < frequencyArray.length; i++) {
+            frequencyArray[i] += myReader.read();
+        }
+        myReader.close();
+        return frequencyArray;
     }
     public byte[] deCompress(String inputFile, String outputFile) throws IOException {
         DataInputStream input =
@@ -58,10 +68,10 @@ public class Huffman {
         ArrayList<Byte> out = new ArrayList<>();
 
         int lastByte = input.readInt();
-        PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<>(256,
+        PriorityQueue<HuffmanNodeHenrik> priorityQueue = new PriorityQueue<>(256,
                 (a,b) -> a.frequency -b.frequency);
         priorityQueue.addAll(makeNodeList(frequencies));
-        HuffmanNode tree = huffmanTree(frequencies);//Kan måtte gjøres om
+        HuffmanNodeHenrik tree = huffmanTree(frequencies);//Kan måtte gjøres om
         byte ch;
         byte[] bytes = input.readAllBytes();
         input.close();
@@ -100,9 +110,9 @@ public class Huffman {
         }
         return byteArray;
     }
-    private static Bitstring writeChar(HuffmanNode tree, Bitstring bitstring,
+    private static Bitstring writeChar(HuffmanNodeHenrik tree, Bitstring bitstring,
                                        ArrayList<Byte> decompessedBytes){
-        HuffmanNode tempTree = tree;
+        HuffmanNodeHenrik tempTree = tree;
         int c = 0;
         for(long j = 1 << bitstring.length -1; j != 0; j >>= 1){
             c++;
@@ -112,15 +122,15 @@ public class Huffman {
             }
             else tempTree = tempTree.rightChild;
 
-        if (tempTree.leftChild == null){
-            long cha = tempTree.character;
-            decompessedBytes.add((byte) cha);
-            long temp = (long) ~(0);
-            bitstring.bits = (bitstring.bits & temp);
-            bitstring.length = bitstring.length - c;
-            c = 0;
-            tempTree = tree;
-        }}
+            if (tempTree.leftChild == null){
+                long cha = tempTree.character;
+                decompessedBytes.add((byte) cha);
+                long temp = (long) ~(0);
+                bitstring.bits = (bitstring.bits & temp);
+                bitstring.length = bitstring.length - c;
+                c = 0;
+                tempTree = tree;
+            }}
         return bitstring;
     }
 
@@ -134,22 +144,22 @@ public class Huffman {
         return freq;
     }
 
-    public HuffmanNode huffmanTree(int[] freq){
-        PriorityQueue<HuffmanNode> priorityQueue = new PriorityQueue<>();
+    public HuffmanNodeHenrik huffmanTree(int[] freq){
+        PriorityQueue<HuffmanNodeHenrik> priorityQueue = new PriorityQueue<>();
         for (char i = 0; i < ARRAY_SIZE; i++) {
             if (freq[i] > 0){
-                priorityQueue.add(new HuffmanNode(i, freq[i], null, null));
+                priorityQueue.add(new HuffmanNodeHenrik(i, freq[i], null, null));
             }
         }
         if (priorityQueue.size() == 1){
-            priorityQueue.add(new HuffmanNode('\0',1, null, null));
+            priorityQueue.add(new HuffmanNodeHenrik('\0',1, null, null));
         }
         while (priorityQueue.size() > 1){
-            HuffmanNode left = priorityQueue.poll();
+            HuffmanNodeHenrik left = priorityQueue.poll();
             //System.out.println(left.character + " " +left.frequency);
-            HuffmanNode right = priorityQueue.poll();
+            HuffmanNodeHenrik right = priorityQueue.poll();
             //System.out.println(right.character + " " + right.frequency);
-            HuffmanNode parent = new HuffmanNode('\0',
+            HuffmanNodeHenrik parent = new HuffmanNodeHenrik('\0',
                     left.frequency + right.frequency,
                     left, right);
             priorityQueue.add(parent);
@@ -157,7 +167,7 @@ public class Huffman {
         return priorityQueue.poll();
     }
 
-    public void lookUpTable(HuffmanNode n, String s){
+    public void lookUpTable(HuffmanNodeHenrik n, String s){
         if (n.isLeaf()){
             bitStrings[n.character] = s;
             return;
@@ -187,8 +197,8 @@ public class Huffman {
     }*/
 
     private void writeToOutputFile(String outpath, byte[] compressedBytes) throws IOException {
-       out =
-               new DataOutputStream(new FileOutputStream(outpath));
+        out =
+                new DataOutputStream(new FileOutputStream(outpath));
         for (int i: freq){
             out.writeInt(i);
         }

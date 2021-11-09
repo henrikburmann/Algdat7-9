@@ -11,18 +11,29 @@ public class Main {
         File text = new File("src/Øving8/test_files/test.txt");
         File lzcompText = new File("src/Øving8//test_files/compressed_test" +
                 ".txt");
-        File huffComp = new File("src/Øving8/test_files/huffmanComp");
-        File huffDeComp = new File("src/Øving8/test_files/huffmanDecomp");
+        File huffComp = new File("src/Øving8/test_files/huffmanComp.txt");
+        File huffDeComp = new File("src/Øving8/test_files/huffmanDecomp.txt");
         File lzDeComp = new File("src/Øving8/test_files/decompressed.txt");
 
         CompLZ77 comp = new CompLZ77(text, lzcompText);
+        comp.compressFile();
+        byte[] inputFile = Files.readAllBytes(lzcompText.toPath());
 
-        byte[] byteInput = Files.readAllBytes(lzcompText.toPath());
         Huffman huff = new Huffman(lzcompText, huffComp);
-        huff.compress(byteInput, "src/Øving8/test_files/huffmanComp");
+        huff.compress(inputFile, "src/Øving8/test_files/huffmanComp.txt");
+        byte [] arr = huff.deCompress("src/Øving8/test_files/huffmanComp.txt",
+                "src/Øving8" +
+                "/test_files/huffmanDecomp.txt");
+
+        huff.writeDecomp(arr, huffDeComp);
+        DecompLZ77 decomp = new DecompLZ77(huffDeComp, lzDeComp);
+        decomp.decompress();
+
+        int i = 0;
+        int k = 1;
+        int l = 1;
 
 
-        //DecompLZ77 decomp = new DecompLZ77();
 
     }
 
