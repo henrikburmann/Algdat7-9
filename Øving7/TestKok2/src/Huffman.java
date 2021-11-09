@@ -1,4 +1,3 @@
-package Øving8;
 import java.util.PriorityQueue;
 
 public class Huffman {
@@ -11,7 +10,7 @@ public class Huffman {
         this.root = generateRoot(frequencyArray);
         this.bitStrings = new String[ARRAY_SIZE + 1];
     }
-
+    
     public HuffmanNode getRoot() {
         return root;
     }
@@ -51,8 +50,8 @@ public class Huffman {
         lookUpTable(n.leftChild,  s + "0");
         lookUpTable(n.rightChild, s + "1");
     }
-
-
+    
+    
     public Integer decodeHuffmanCode(String huffManString){
         HuffmanNode current = getRoot();
         for(char c : huffManString.toCharArray()){
