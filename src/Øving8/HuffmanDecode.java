@@ -1,5 +1,4 @@
 package Øving8;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;

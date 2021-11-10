@@ -1,9 +1,7 @@
 package Øving8;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
-
 public class HuffmanEncode {
     private static final int ARRAY_SIZE = 256;
     private static Huffman huffman;

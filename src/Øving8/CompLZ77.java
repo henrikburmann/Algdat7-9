@@ -1,5 +1,4 @@
 package Øving8;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -9,11 +8,7 @@ import java.util.ArrayList;
 
 public class CompLZ77 {
     /*
-    TODO: dictonary (størrelse = ?)A
-        distanse for å se tilbake = ?
-        minimum søkeord størrelse = ?
-
-        - bytes fra input fil
+          - bytes fra input fil
         - lagrer compressed bytes i output fil
      */
 
@@ -46,11 +41,7 @@ public class CompLZ77 {
     }
 
     /**
-     * todo:
-     *  dictionary??
-     *  - leser fra bytes inputfile (lite repetering i starten)
-     *  - lagre alt som kan komprimeres
-     *  - må også lagre ting som ikke kan komprimeres
+
      */
     public void compressFile() throws IOException {
 
@@ -167,7 +158,6 @@ public class CompLZ77 {
      * @param indexStart
      * @return index if found, -1 if no matching byte sequnce is found
      * <p>
-     * todo: står på en index og må søke bakover i input
      * Hvor langt skal jeg søke bakover??
      * lengde på søkeord jeg skal matche med??
      */
