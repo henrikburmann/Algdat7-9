@@ -1,122 +1,0 @@
-ÒÃ˜ving 7 algoritmer og datastrukturer
-Innhold
-.%ş 10øledning.'è 1 Testfilerforkomprimeroÿ.8õKravtillÃ¸srşenp%ì2 Tipsomheleoppgavenjÿ.4ıDel-öLempel-Ziv6ÿ.l
-ÿL4ıziv3#ÿDk	óHuffmankodingnş 3lÿH5*ì 3 Javatipsforbegged}	ÿr<û4 Noegøeeksempl2 Ç.. 4
-Innledning
-Lag et program som kan lese en fil og lagíkomprimert utgave. AıannGípakker ut igjen (de?	ıer)WÔgjenskaper originalen.
-Bruk bÃ¥de Lempel-Ziv0ëHuffmankoding for Ã¥ U
-â. LZ gjÃ¸r om fila til en blan4îav bakoverreferans|ıg uF	åte strenger. Innholdet i de&ıne <ã- meres videre med Huffmannko}±.
-Det kan bli en del arbeid, da hÃ¥ndtering av bits & bytes er nytt for mange. Múer derÇdenne Ã¸vingen teller litt mer. Jobb gjerne i grupper, ogS×del arbeidet. Les hele oppgaveteksten fÃ¸oøe begynn@ßunngÃ¥ misforstÃ¥elser.
-Testfiler_ñ komprimering
-OVì (pdf) Forelesningenıtxt(ºlyx) 100MB enwik8
-http://www.iie.ntnu.no/fag/_alg/kompr/opg7-2020.pdf 4&ùdiverse23ıtxtd/ılyxd'ùenwik8
-À er en diger fil, de fÃ¸rste 100MB av engelsk wikipedia. Dere trór ikke hÃ¥ndtòden, men har d)ïet kjapt program,xêdet jo artig Ã¥ prÃ¸ve[Ğnne fila brukes i rekordforsÃ¸k, de beste klarer>ıess|ü sam~Ùtil ca. 11MB.
-
-side 2 av 5 Innhold
-Krav(ælÃ¸sningen
-1. SendinnprogrLìrforkomprimeringogdeô,somklarerÃ¥(	Şeog pakke ut igjen ihvertfall Ã©n |÷estfilenevØ med en skjermdump som viser filstÃ¸rrelğor originalfil, {	ÿt+õ og utpakkeü, i {åjeg fÃ¥r uventede problemerøÃ¥ kjÃ¸rògrammene.
-2. Kaüings	Ít bruker bÃ¥de Lempel-Ziv eller Huffmannkoding, fordãlage minst mulig fil.
-3. Denki¸tefilamÃ¥vÃ¦remindreennoriginalen.DettemÃ¥lesvedÃ¥sepÃ¥filstÃ¸rrelser.
-4VÿkUßingsprogrammetmÃ¥greieÃ¥gjenskape_åfila,nÃ¥rdetbarehardenkom-
-Jıte $ï.
-a) Ingen ekstraÙer, all som trengs mÃ¥ finnes i den komIòb) At utpakket^ er lik originalen, kan f.eks. testes med Â«fcÂ» i windows, eller Â«diffÂ» pÃ¥ linux/mac.
-5. Dere mÇage programmene selv, ikke noe Â«cut & pasteÂ» fra nettetE÷t er mye aùÃ¦re avågjÃ¸re en slik oppgave, somÿi^ôfÃ¥r med segÿÂk÷. BÃ¥de n(Ãdet gjelder algoritmene, og generell programmering.
-6. Kompriö og utpakkçskal skje i separate kjÃ¸<Ùer. Det er ikke greit Ã¥ ha ett sam- lepô som bÃ¥de gAü inngÿotïi en operasjon. U	¯skal bare trenge den komprimerte fila, ikke noen variabler/datastrukturer fra innsäa.
-7. Programmene mÃ¥ lese ovıriv\öer. AltsÃ¥d÷bare test^Á i en tabell.
-Tips om hele oppgaven
-Det er lett Ã¥ gjÃ¸re feil,j÷vanskeligídebugge. NÃ¥r noe g	ögalt, brukz÷filer somXßsÃ¥ smÃ¥ at dere kan fÃ¸lge med pşlt/åskjer hele veien. F.eks. enYÿ 4Şbare 3â€“20 byte. Da blir det lettiğÃ¥ se nÃ¥r noe g	ïgalt. En mÃ¥te er&ûbrukedädebugger som kan vise innholZõi variablerEüanneKülegg2ÿ Lò-utskrifter fomúse hvaböskjer.
-Det>ülurtCêteste og lage LZ-delenøHuffmannşhvVñseg. Programmer\êzip gjÃ¸r alt i memory/×Ã¥ vÃ¦re effektive. Men det er ikke noe g:õÃ¥ ha ett pcÿ `ÿg\ÌLZ- komprimeringen og skriver sitt resultat til fil,"ëderetter et Huffmann-_õleser denne5ÿaWûen nyhımer~
-ÿt]ü. De	Şing kan hÃ¥ndteres tilsvarende. Daÿv=ôtrinn testesmğdebugges for segZëtte gjÃ¸r det ogsÃ¥ lìre Ã¥ dele pÃ¥ arbei#Çi gruppa.
-Deloppgave Lempel-Ziv
-Implementer en variant av%ç datakompresjon. (Men ikkJñ-Welsh)
-Tips omdßziv
-Normalt blir det veldig lite X
-ê pÃ¥ smÃ¥ filer. Bitte
-ğ kan brukes for )ænne feil i programmet, men$ıtesgübÃ¸rcòne minst vÃ¦re¶noen kilobyte.
-Â© Helge Hafting og stiftelsen TISIP
-
-Deloppgave Huffmankod.ìside 3 av 5
-Det blircùavgjÃ¸rG r Ã¥ ta, som f.eks. hvor langt bakover programmet deres skal lete etter repeterte sekvenser. Zip$úr 32kBMÊ, det fins ogsÃ¥ versjoner som gÃ¥r 64kB tilbake. Hvisxñ lar programmet,ù lenger-û, vilaøbli treg7òmen sannsynligNùkomprimTîbedre ogsÃ¥.
-Om enDîha et veldig kjaptzû, kandğlÃ¸nne seg Ã¥ la
-úinspirwÓav avanserte tekst- sÃ¸kalgoritmer.
-Filformat
-
-ô bestemmer dG÷selv. DetxÙfort bli en avveiing mellom hvor kompliuæ programmet skal vÃ¦re, og*úgodt dñkomprimere.
-Den
-ùte fila~ébestÃ¥ av blokker. HverÂ starter med en byte-verdi, som er et tall mellom -128 og +127Jşisşet,Şnegativt, f.eks. -57, betyr det atşerlûserieyütegnoåikke lot seg komprimere. (I@ïte eksempelet, 57:ô).
-Hvis tall]òpositivt, angi{õlengden pÃ¥}ùrepeterjákvens. De neste 1, 2 eller 4 byuør et helc÷ som fort#áhvor langt bakover i fila denne`şenFñÃ¥ finne. Med 1^ÿ(dÿ)eşdeEøre mulig.ôgÃ¥ 127 tegn`ö. Programm/ßlir raskt, men komprimerer antageJèikke sÃ¥ kraftig. Med 2 zø (short)lør det an{ëopp til 32 kB bakoveriùvi brukgşlt[óopp en ekstraZÿ.fÿ4fùint) ka:ÿg\ı2 G[	Ï. Det gir mange flere muligheter for Ã¥ finne repÇte strenger, men bruker ogsÃ¥ mer plass. Et program som lRïopptil 2 GB bakovFßblir sannsynligvis temmelig tregt]‹. Det kan lÃ¸nne seg Ã¥ begrense litt. . .
-Deloppgave Huffmankoding
-Lag et program som leser inn en fil, teller frekvYör og generû en hUäntre ut fra byte- verdiene iKíen. Deretter bruker{ımetFğet til Ã¥ skrivee÷komprimer*
-ù- kodet\æ.
-For pakke ut, trenger utüingsjñnok informasjonl÷gjenskapeaêtreet. Det enkleste er+Ãlegge frekvenstabellen fÃ¸rst i den komprimerte fila. Adaptiv_úkodingRÑen mer avansert og krevende lÃ¸sning.
-Tips om H?ÿ
-Öndata som trengs for Ã¥ pakke ut igjen
-DetqÿiünÃ¸ddşig)ùlagre hNğtreet, det holdeLÿl#ìfrekvenstabellen. UtfÙings- programmet kan dermed bygge opp sõ tre ut fraO	ùene.
-inÿeñr[256];
-En sliky² blir alltid 1 kB, filen som skal komprimeres mÃ¥ dermed vÃ¦re stor nok til at-
-ıingEóparer mer enn`ı. F`ôe jeg lenker=ø, skulleXÿeY³.
-Â© Helge Hafting og stiftelsen TISIP
-
-side 4 av 5 Innhold
-Om bitstrenger
-En
-ô er ikke en èsom dette: "00001101". Dı er*üteksAêmed 8 tegn. Skriver viBü tilZ÷fil, gÃ¥rYÿ 2øbyte, og-üoppnÛikke noe datakompresjon. Tvert imot fGşviWõveldig storcâ!
-Men bitstrengen 0b00001101 e|Şsamme som tallet 13, og kan lagresäÃ©n byte.
-Datatypen Â«longÂ»KúpÃ¥ 64lı. Ik÷tegn vil |ş lår Huffmankode enn det. (Detrİvises at nÃ¥ man komprimerer en filkú2.7GB,[ır ir
-õkodes med m3æn 44 bit.) Â«longÂ» er der$îegnet til Ã¥ lagre,ÿsXü. En6
-ôhar alltid 6Sø, sÃ¥ en3
-ò-klasse mÃ¥ ogÚha et felt som forteller hvor mange avuıene#øer med iV
-óen.
-Ã… skriveÉr til fil, blir en del ekstra arbeid. Java lar oss bareIßhele byte, og for Ã¥ vÃ¦re effektnúÃ¸r vi9óbyte-array avvÊviss stÃ¸rrelse. Men, med hÃ¸yre/venstreskift samt binjÿ&|î| -operasjoner, kaTò fÃ¥ vÃ¥re bit@ànger inn i et byte-array som sÃ¥9Ôskrives til disk.
-Tilsvarende for lesing: ViÿeSÿeQä, og plukker deretter ut Ã©nùÃ©n bitNÒÃ¥ navigere gjennom huffmanntreet.
-Om koking
-P.Úettet fins mange implementasjoner av HCÖkoding. De har sine sÃ¦regenheter som vi k|îer igjen. Programm!İbruker hashset/hasmap vil bli underAÿtNükok.+Şopplegg trengs ikke for Ã¥ lÃ¸se dtí oppgaven.
-Javatips&übegg#ÿl ®r
- Datatype bits byte
-min
--128 -32 768 0 -2147483648 -9223372036854775808
-max
-127 2÷7 65 535 6	ş7 5ş7
-oğ 8 short 16 charıintJÒlong 64
-1 2 2 4 8
- Programmer som leser Ã©n ogÿbR°fra fil, blir alltid trege i Java. For Ã¥ fÃ¥ noe fart i sakene, lÃ¸nner det seg*Ålese/skrive stÃ¸rre blokker, f.eks. et array med bytes. MenGùer ikke$õkrav, poengõkompresjon,%âhastighet.
-Noe bitfikling blirPùuansettkçHuffmannoppgaven. Det gÃ¥tĞan Ã¥ skrive Â«en halv byteÂ» til fil, man mÃ¥ iaëminste samle opp bits-şmaAşr HşelGÿ.ròkan vÃ¦re lurttülage(ñegen klasse forûsendeUùtrenger\ùfil.
-No.ìodeeksempler
-//Ã…pne ßer:
-innfil = new DataInputStream(øBufferedüFile,ñinn_navn)));
-utUıOutVÿOüFile.şutW
-…Â© Helge Hafting og stiftelsen TISIP
-
-Javatips for begge deloppgaver
-side 5 av 5
-//Lese data fra fil inn i byte-array:
-//  ı []+ı : õet vi leser7ÿ
-+ìint posisjon : indexSú for d>ÿ
-<	ùmengde gûntall}úvi viloÿ 0êinnfil.readFully(data,z	ÿ,Hú);
-//L5ü Ã©nNÿ
-Súx;
-x =~ÿfJûByte(3îHar ogsÃ¥:
-short s*ÿSö();
-char cGüCharGûint ibşIn6úlong l}üLong}ÚSkrive data fra byte-array til fil:
-utnúwrite()î, posisjon, mengdeKıÃ©nFÿ @	ÿbúsingleû= 17;VûByte(!
-ÿ)NóHar ogsÃ¥:
-//,õChar(char cvÿuG
-ùShort(sş s÷Int(int i6õLong(long lyğente 13 bit fra ü1, 8ú2 og 4$Û3,
-//og fÃ¥ det inn i et byte-array:
-ó[] data = newû[3];
-hÿ mô = 0b1101000ø11; //13oÿ
-'	ÿ2'ÿ1!ı1; ı//8&ÿ3Mı010!ÿ &ÿ3Lõ//8 fÃ¸rste\ü fra[ê1 til data[0]
-//Ã¸vrig$ês maskeres bort med &
-+ö = (byte)(Fû& 0b1î);
-//5 gjenvÃ¦rendtÿ1tëhÃ¸yreskiftet fjerner2ès vi allerede har lagt i<ÿ0<àtrenger ikke maskere fordi reste~	ıs i}úer 0.
-ö = (byte)(÷>> 8);
-// éhar plass til 3 av de 8Sü fraTì2
-//venstreskifter 55øer fordi4÷5 fÃ¸rste<üs i c÷er i brukQôfÃ¸r
-//trengğkke maskere vekk>ÿfVÿbIøover 256+ågÃ¥r inn i en byte uansett
-pü|= (á)(long2 << 5);
-//5 gjenvÃ¦rendeiû fra &ütil Bç2]
-//hÃ¸yreskift fjerner 3îs vi allerede la i7ı1]
-?ö = (byte)(Z÷>> 3);
-// ÷har plassuıe 3Yû fra 2ÿ3I	ÿ|Já3 << 5);
-System.out.printf("%x û\n", hş0]	ÿ1	Ø2]);
-Â© Helge Hafting og stiftelsen TISI
