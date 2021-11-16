@@ -4,7 +4,6 @@ import java.io.*;
 import java.util.*;
 
 public class Djikstra {
-    private PriorityQueue<Node> pq;
     private ArrayList<Node> nodes;
     private ArrayList<Edge> edges;
 
