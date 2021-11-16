@@ -13,6 +13,7 @@ public class Node implements Comparable<Node> {
     private Node predeseccor;
     private List<Edge> adjList;
 
+    //Konstruktør for bruk av ALT
     public Node(int number, double longitude, double latitude){
         this.number = number;
         this.longitude = longitude;
@@ -21,7 +22,7 @@ public class Node implements Comparable<Node> {
         this.distance = Integer.MAX_VALUE;
     }
 
-    // Hvis man bare skal kjøre djikstras uten ALT
+    // Konstruktør for bruk av Djikstra
     public Node(int number) {
         this.number = number;
         this.distance = Integer.MAX_VALUE; // Infinite
@@ -75,9 +76,8 @@ public class Node implements Comparable<Node> {
     }
 
     @Override
-    public int compareTo(Node o) {
-        Node yo = (Node) o;
-        return Integer.compare(this.distance, yo.distance);
+    public int compareTo(Node n) {
+        return Integer.compare(this.distance, n.distance);
     }
 
     @Override

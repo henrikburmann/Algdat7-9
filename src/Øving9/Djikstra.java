@@ -20,23 +20,17 @@ public class Djikstra {
     }
 
     public void readFile(String nodeFile, String edgeFile) throws IOException {
-        // Read Nodes
+        // Leser noder
         BufferedReader brNodes = new BufferedReader(new FileReader(nodeFile));
         StringTokenizer stNodes = new StringTokenizer(brNodes.readLine());
         int size = Integer.parseInt(stNodes.nextToken());
-
+        //Da breddegrader ikke er viktig for Djikstra trenger vi ikke lese
+        // mer fra filen enn antall noder.
         for (int i = 0; i < size; i++) {
-            stNodes = new StringTokenizer(brNodes.readLine());
-            int number = Integer.parseInt(stNodes.nextToken());
-
-            double lo = Double.parseDouble(stNodes.nextToken());
-            double la = Double.parseDouble(stNodes.nextToken());
-
-            Node n = new Node(number, lo, la);
-            nodes.add(n);
+            nodes.add(new Node(i));
         }
         
-        // Read edges
+        // Leser kanter
         BufferedReader brEdges = new BufferedReader(new FileReader(edgeFile));
         StringTokenizer stEdges = new StringTokenizer(brEdges.readLine());
         size = Integer.parseInt(stEdges.nextToken());
@@ -76,18 +70,23 @@ public class Djikstra {
      *
      * @param start
      */
-    public void findShortestDistance(Node start) {
+    public void findShortestDistance(Node start, Node end) {
         start.setDistance(0); // start have cost 0
 
         PriorityQueue<Node> queue = new PriorityQueue<>();
 
         queue.add(start);
         start.setVisisted(true);
-
+        int nodesVisited = 0;
         while (!queue.isEmpty()) {
 
             Node current = queue.poll();
-
+            nodesVisited++;
+            //Hvis endenoden tas ut av køen returnerer metoden
+            if (current == end){
+                System.out.println("Antall noder besøkt: " + nodesVisited);
+                return;
+            }
             for (Edge e: current.getAdjList()) {
 
                 Node n = e.getTo();
@@ -110,6 +109,7 @@ public class Djikstra {
         }
     }
 
+    //Går fra endenoden til startnoden for å finne veien som ble gått.
     public List<Node> getShortestPath(Node target) {
         List<Node> path = new ArrayList<>();
 
