@@ -1,7 +1,6 @@
 package Øving9;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +16,9 @@ public class ALT {
         edges = new ArrayList<>();
 
         readFile(nodeFile, edgeFile);
+
+        System.out.println("Antall noder: " + nodes.size());
+        System.out.println("Antall kanter: " + edges.size());
     }
 
     public void readFile(String nodeFile, String edgeFile) throws IOException {

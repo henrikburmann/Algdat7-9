@@ -16,8 +16,8 @@ public class Node implements Comparable<Node> {
     //Konstruktør for bruk av ALT
     public Node(int number, double longitude, double latitude){
         this.number = number;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.longitude = convertToRadian(longitude);
+        this.latitude = convertToRadian(latitude);
         this.adjList = new ArrayList<>();
         this.distance = Integer.MAX_VALUE;
     }
@@ -42,6 +42,10 @@ public class Node implements Comparable<Node> {
         return distance;
     }
 
+    //Converts degrees to radians.
+    private double convertToRadian(double degrees){
+        return degrees * Math.PI / 180;
+    }
 
     public int getDistance() {
         return distance;
