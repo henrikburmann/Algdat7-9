@@ -76,11 +76,11 @@ public class Node implements Comparable<Node> {
     @Override
     public int compareTo(Node o) {
         Node yo = (Node) o;
-        return Integer.compare(yo.distance, yo.getPredeseccor().distance);
+        return Integer.compare(this.distance, yo.distance);
     }
 
     @Override
     public String toString() {
-        return number + " -> ";
+        return number + "";
     }
 }

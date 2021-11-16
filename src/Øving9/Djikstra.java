@@ -52,13 +52,22 @@ public class Djikstra {
         addNeigbours(); // legger til
     }
 
-    // Må nesten legge til noen naboer her men hvordan skal man gjøre dette???
+
+    /**
+     * legger til alle nabo noder til nodene
+     */
     public void addNeigbours() {
         for (Edge e: edges) {
-            e.getFrom().addNeigbour(e);
+            // Fra noden til en enge
+            Node n = e.getFrom();
+            // Legger til edge i vedsiden av listen til node
+            // NB: alle noder betår av en vedsiden av liste (adj_list)
+            n.addNeigbour(e);
+
         }
     }
 
+    // for å hente ut spesifik node fra en index
     public Node getNodeFromList(int index) {
         return nodes.get(index);
     }
