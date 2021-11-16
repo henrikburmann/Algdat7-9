@@ -20,14 +20,5 @@ public class Client {
         // printer ut path fra startnoden som man har definert øverst
         System.out.println(d.getShortestPath(d.getNodeFromList(til)));
 
-        /*
-        System.out.println();
-        System.out.println("Distanse fra node 27872 til 34674: " + d.getNodeFromList(27873).getDistance());
-        System.out.println();
-        System.out.println(d.getShortestPath(d.getNodeFromList(34674)));
-
-
-
-         */
     }
 }

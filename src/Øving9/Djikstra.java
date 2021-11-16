@@ -17,7 +17,6 @@ public class Djikstra {
         System.out.println("size of nodes: " + nodes.size());
         System.out.println("size of edges: " + edges.size());
 
-        PriorityQueue<Node> queue = new PriorityQueue<>();
     }
 
     public void readFile(String nodeFile, String edgeFile) throws IOException {
@@ -25,16 +24,16 @@ public class Djikstra {
         BufferedReader brNodes = new BufferedReader(new FileReader(nodeFile));
         StringTokenizer stNodes = new StringTokenizer(brNodes.readLine());
         int size = Integer.parseInt(stNodes.nextToken());
+
         for (int i = 0; i < size; i++) {
             stNodes = new StringTokenizer(brNodes.readLine());
             int number = Integer.parseInt(stNodes.nextToken());
-            // double lo = Double.parseDouble(stNodes.nextToken());
-            // double la = Double.parseDouble(stNodes.nextToken());
-            //nodes.add(new Node(number, lo, la));
 
-            // kaller på konstruktør nummer 2
-            nodes.add(new Node(number)); // New nodes with cost = infinite
+            double lo = Double.parseDouble(stNodes.nextToken());
+            double la = Double.parseDouble(stNodes.nextToken());
 
+            Node n = new Node(number, lo, la);
+            nodes.add(n);
         }
         
         // Read edges
@@ -49,7 +48,7 @@ public class Djikstra {
             edges.add(new Edge(from, to, weight));
         }
 
-        addNeigbours(); // legger til
+        addNeigbours();
     }
 
 

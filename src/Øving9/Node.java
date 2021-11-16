@@ -17,10 +17,11 @@ public class Node implements Comparable<Node> {
         this.number = number;
         this.longitude = longitude;
         this.latitude = latitude;
-
-
+        this.adjList = new ArrayList<>();
+        this.distance = Integer.MAX_VALUE;
     }
 
+    // Hvis man bare skal kjøre djikstras uten ALT
     public Node(int number) {
         this.number = number;
         this.distance = Integer.MAX_VALUE; // Infinite
