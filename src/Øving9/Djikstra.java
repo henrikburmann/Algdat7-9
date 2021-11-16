@@ -9,6 +9,7 @@ public class Djikstra {
     private PriorityQueue<Node> pq;
     private ArrayList<Node> nodes;
     private ArrayList<Edge> edges;
+    private int INT_MAX = 	2147483647;
 
     public Djikstra(){
         nodes = new ArrayList<>();
@@ -25,7 +26,9 @@ public class Djikstra {
             int number = Integer.parseInt(stNodes.nextToken());
             double lo = Double.parseDouble(stNodes.nextToken());
             double la = Double.parseDouble(stNodes.nextToken());
-            nodes.add(new Node(number, lo, la));
+            Node n = new Node(number, lo, la);
+            n.weight = INT_MAX / 2;
+            nodes.add(n);
         }
         
         //Read edges
@@ -38,9 +41,6 @@ public class Djikstra {
             Node to = nodes.get(Integer.parseInt(stEdges.nextToken()));
             int weight = Integer.parseInt(stEdges.nextToken());
             edges.add(new Edge(from, to, weight));
-        }
-        for (int i = 0; i < edges.size(); i++) {
-            System.out.println(edges.get(i).getFrom().number + " " + edges.get(i).getTo().number + " " + edges.get(i).getWeight());
         }
     }
 }
