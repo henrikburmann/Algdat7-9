@@ -5,6 +5,7 @@ import java.io.IOException;
 public class Client {
     public static void main(String[] args) throws IOException {
         Djikstra d = new Djikstra();
-        d.readFile("src/Øving9/Files/nodeSmall", "src/Øving9/Files/edgeSmall");
+        // bruker island kartet for å teste
+        d.readFile("src/Øving9/Files/Test/noder.txt", "src/Øving9/Files/Test/kanter.txt");
     }
 }
