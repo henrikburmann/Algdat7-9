@@ -20,27 +20,53 @@ import java.util.StringTokenizer;
         ALT er bedre når man hele tiden har preprosseseringen.
 
         3 - 8 landemerker.
- */
+
+        Todo:
+            1. hvordan skal man velge landemerker? (burde være ytterst)
+            2. avstandsregnign
+            3. programmet skal vise hvor lang reiseruta er
+
+            noder:
+            number  longitude   latitude
+
+            kanter:
+            from    to  weight  ?   ?
+
+            interessepkt: (bruke for å finne nodenr til kjente kryss)
+            nodenr  kode    "Navn på stedet"
+
+            kode: 1 for stedsnavn eks "Trondheim", 2 for bensinstasjon eks "Shell Herlev"
+
+        nodenr samme som nr. i nodefila
+
+        Todo: finne ut hvordan filtype man skal lagre preprosseseringen i (CSV)
+
+
+
+             */
 
 public class ALT {
     public ArrayList<Node> nodes;
     public ArrayList<Edge> edges;
 
 
-    public ALT(String nodeFile, String edgeFile) throws IOException {
+
+    public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
 
-        readFile(nodeFile, edgeFile);
+        readFile(nodeFile, edgeFile, inpktFile);
 
         System.out.println("Antall noder: " + nodes.size());
         System.out.println("Antall kanter: " + edges.size());
     }
 
-    public void readFile(String nodeFile, String edgeFile) throws IOException {
+    public void readFile(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         // Leser noder
         BufferedReader brNodes = new BufferedReader(new FileReader(nodeFile));
         StringTokenizer stNodes = new StringTokenizer(brNodes.readLine());
+
+
         int size = Integer.parseInt(stNodes.nextToken());
 
         for (int i = 0; i < size; i++) {
@@ -62,6 +88,14 @@ public class ALT {
             int weight = Integer.parseInt(stEdges.nextToken());
             edges.add(new Edge(from, to, weight));
         }
+
+        // leser fil som består av interessepunkter
+        BufferedReader interessePkt = new BufferedReader(new FileReader(inpktFile));
+        StringTokenizer stInpkt = new StringTokenizer(interessePkt.readLine());
+
+
+
+
         addNeigbours();
     }
 
