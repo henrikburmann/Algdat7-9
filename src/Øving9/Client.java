@@ -16,6 +16,9 @@ public class Client {
         int til = 4;
 
         ALT alt = new ALT(nodeEksempel.toString(), edgeEksempel.toString());
+
+
+
         /*
         Djikstra d = new Djikstra(nodeFile.toString(), edgeFile.toString() );
         // Tar utgangspunkt i en node og regner ut alle korteste distanser fra denne til de andre nodene

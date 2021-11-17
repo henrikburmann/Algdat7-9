@@ -6,6 +6,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+/* Litt notater til oppgaven :)
+
+    Samme som A* bare at vi også tar i bruk Landemerker.
+
+    Landemerker:
+        - noder hvor vi beregner:
+            1. Avstand til alle noder (Dijkstra)
+            2. Avstand fra alle andre noder (Dijkstra på omv.graf)
+        - Må gjøre en preprossesering av kartet der vi lagrer dataene i en fil (hvordan skal det se ut?)
+        - bør ligge spredt rundt kanten på kartet??
+
+        ALT er bedre når man hele tiden har preprosseseringen.
+
+        3 - 8 landemerker.
+ */
+
 public class ALT {
     public ArrayList<Node> nodes;
     public ArrayList<Edge> edges;
