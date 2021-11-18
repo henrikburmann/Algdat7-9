@@ -40,10 +40,8 @@ public class Djikstra {
             int weight = Integer.parseInt(stEdges.nextToken());
             edges.add(new Edge(from, to, weight));
         }
-
         addNeigbours();
     }
-
 
     /**
      * legger til alle nabo noder til nodene
@@ -64,9 +62,9 @@ public class Djikstra {
         return nodes.get(index);
     }
 
-
     /**
-     *
+     * Forbedring
+     * Stopper når man kommer til sluttnode
      * @param start
      */
     public void findShortestDistance(Node start, Node end) {
@@ -107,97 +105,6 @@ public class Djikstra {
             current.setVisisted(true);
         }
     }
-
-    /**
-     * Lager en fil med distansen fra startnodene til
-     * alle landemerkene som man har definert
-     * Todo: skal man bruke .csv eller .txt?? finner ut av det senere
-     */
-    public void generateFromStartToLandmarkFile(int n, int s, int e, int v, String outFile) throws FileNotFoundException {
-
-
-    }
-
-
-    /**
-     *
-     * @param n
-     * @param s
-     * @param e
-     * @param v
-     * @throws FileNotFoundException
-     *
-     */
-
-    public void generateToStartFromLandmarkFile(int n, int s, int e, int v) throws FileNotFoundException {
-
-        // OutputStream stream = new FileOutputStream(new File(outFile));
-        int[] landmarks = {n,s,e,v};
-
-        for (int landmark: landmarks) {
-            findShortestDistanceToAll(nodes.get(0));
-
-            for (int i = 0; i < nodes.size(); i++) {
-                // henter ut distansen fra landmark til alle nodene
-                // todo: må nu skrive dette til fil
-            }
-            // resetDistance();
-        }
-        System.out.println(nodes.get(n).getDistance());
-        System.out.println(nodes.get(s).getDistance());
-        System.out.println(nodes.get(e).getDistance());
-        System.out.println(nodes.get(v).getDistance());
-    }
-
-    /**
-     * Trenger ikke denne, veldig rart!!
-     */
-    private void resetDistance() {
-        for (Node node: nodes) {
-            node.setDistance(Integer.MAX_VALUE);
-        }
-    }
-
-
-    /**
-     *
-     * @param start
-     */
-    public void findShortestDistanceToAll(Node start) {
-        start.setDistance(0); // start have cost 0
-
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-
-        queue.add(start);
-        start.setVisisted(true);
-
-        while (!queue.isEmpty()) {
-
-            Node current = queue.poll();
-
-            for (Edge e: current.getAdjList()) {
-
-                Node n = e.getTo();
-
-                if (!n.isVisisted()) {
-                    int dist = current.getDistance() + e.getWeight();
-
-                    if (dist < n.getDistance()) {
-                        // remove from queue
-                        queue.remove(n);
-                        // update values
-                        n.setDistance(dist);
-                        n.setPredeseccor(current);
-                        // add to queue again with new values
-                        queue.add(n);
-                    }
-                }
-            }
-            current.setVisisted(true);
-        }
-    }
-
-
 
     //Går fra endenoden til startnoden for å finne veien som ble gått.
     public List<Node> getShortestPath(Node target) {

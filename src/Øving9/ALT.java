@@ -13,13 +13,13 @@ public class ALT {
     public ArrayList<int[]> toLandmarks = new ArrayList<>();
     public ArrayList<int[]> fromLandmarks = new ArrayList<>();
 
+    public ArrayList<int[]> readtoLandmarks = new ArrayList<>();
+    public ArrayList<int[]> readFromLandmarks = new ArrayList<>();
 
 
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
-        //toLandmarks = new ArrayList<>();
-        //fromLandmarks = new ArrayList<>();
 
         readFile(nodeFile, edgeFile, inpktFile);
 
@@ -56,12 +56,34 @@ public class ALT {
         }
 
         // leser fil som består av interessepunkter
+        // todo: fullføre denne senere
         BufferedReader interessePkt = new BufferedReader(new FileReader(inpktFile));
         StringTokenizer stInpkt = new StringTokenizer(interessePkt.readLine());
 
         addNeigbours();
         addOppoNeigbours();
+    //    readLandmarkDistances();
     }
+    private void readLandmarkDistances() throws IOException{
+        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/test.txt"));
+        StringTokenizer stToNode;
+        for (int i = 0; i < 4; i++) {
+            readFromLandmarks.add(new int[nodes.size()]);
+        }
+        for (int i = 0; i < nodes.size(); i++) {
+            stToNode = new StringTokenizer(bfToNode.readLine());
+            for (int j = 0; j < 4; j++) {
+                readFromLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
+            }
+        }
+
+        int s = 0;
+        for (int i = 0; i < 4; i++) {
+            s += readtoLandmarks.get(i).length;
+        }
+        System.out.println("Yooooo. Størrelsen på denne shiten er: " + s);
+    }
+
 
     public void findShortestDistance(int startNode){
 
@@ -94,7 +116,7 @@ public class ALT {
         }
     }
 
-    // for å hente ut spesifik node fra en index
+    // for å hente ut spesifik node fra en index i nodes
     public Node getNodeFromList(int index) {
         return nodes.get(index);
     }
@@ -122,7 +144,10 @@ public class ALT {
         }
 
         for (int j = 0; j < nodes.size(); j++) {
-            pw.write(toLandmarks.get(0)[j] + "," + toLandmarks.get(1)[j] + "," + toLandmarks.get(2)[j] + "," + toLandmarks.get(3)[j]);
+            pw.write(j + ": " + toLandmarks.get(0)[j] + " "
+                    + toLandmarks.get(1)[j] + " "
+                    + toLandmarks.get(2)[j] + " "
+                    + toLandmarks.get(3)[j]);
             pw.println(" ");
         }
     }
@@ -151,13 +176,18 @@ public class ALT {
         }
 
         for (int j = 0; j < nodes.size(); j++) {
-            pw.write(fromLandmarks.get(0)[j] + "," + fromLandmarks.get(1)[j] + "," + fromLandmarks.get(2)[j] + "," + fromLandmarks.get(3)[j]);
+            pw.write(j+ ": " + fromLandmarks.get(0)[j] + " "
+                    + fromLandmarks.get(1)[j] + " "
+                    + fromLandmarks.get(2)[j] + " "
+                    + fromLandmarks.get(3)[j]);
             pw.println(" ");
         }
     }
 
     /**
-     * Trenger ikke denne, veldig rart!!
+     * trenger å resette data for nodene hver gang
+     * hvis man kjører skal kjøre korteste vei metoden
+     * flere ganger
      */
     private void reset() {
         for (Node node : nodes) {
@@ -168,6 +198,8 @@ public class ALT {
 
     /**
      * @param start
+     * Tar inn en startnode og finner avstand
+     * til node fra start
      */
     private int[] findShortestDistanceToAll(Node start) {
         reset();
@@ -212,6 +244,8 @@ public class ALT {
 
     /**
      * @param start
+     * Tar inn en startnode og finner avstand
+     * fra node til start
      */
     private int[] findShortestDistanceFromAll(Node start) {
         reset();
@@ -252,4 +286,20 @@ public class ALT {
         }
         return distances;
     }
+
+    /**
+     *
+     * @return
+     *
+     * D(node, mål) >= D(Landemerke, mål) - D(Landemerke, node)
+     *
+     *
+     */
+    public boolean distanceStartToEndGreater(Node start, Node end) {
+        return false;
+
+    }
+
+
+
 }
