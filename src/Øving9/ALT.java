@@ -63,6 +63,11 @@ public class ALT {
         addOppoNeigbours();
     }
 
+    public void findShortestDistance(int startNode){
+
+    }
+
+
     /**
      * legger til alle nabo noder til nodene
      */
@@ -223,7 +228,7 @@ public class ALT {
 
             for (Edge e : current.getOppositeAdjList()) {
 
-                Node n = e.getTo();
+                Node n = e.getFrom();
 
                 if (!n.isVisisted()) {
                     int dist = current.getDistance() + e.getWeight();
