@@ -12,6 +12,7 @@ public class Node implements Comparable<Node> {
     private boolean visisted;
     private Node predeseccor;
     private List<Edge> adjList;
+    private List<Edge> oppositeAdjList;
 
     //Konstruktør for bruk av ALT
     public Node(int number, double longitude, double latitude){
@@ -19,6 +20,7 @@ public class Node implements Comparable<Node> {
         this.longitude = convertToRadian(longitude);
         this.latitude = convertToRadian(latitude);
         this.adjList = new ArrayList<>();
+        this.oppositeAdjList = new ArrayList<>();
         this.distance = Integer.MAX_VALUE;
     }
 
@@ -55,6 +57,10 @@ public class Node implements Comparable<Node> {
         this.adjList.add(edge);
     }
 
+    public void addOppoNeigbour(Edge edge){
+        this.oppositeAdjList.add(edge);
+    }
+
     public boolean isVisisted() {
         return visisted;
     }
@@ -67,6 +73,9 @@ public class Node implements Comparable<Node> {
         return adjList;
     }
 
+    public List<Edge> getOppositeAdjList(){
+        return oppositeAdjList;
+    }
     public void setVisisted(boolean visisted) {
         this.visisted = visisted;
     }

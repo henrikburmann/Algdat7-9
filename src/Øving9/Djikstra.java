@@ -108,7 +108,6 @@ public class Djikstra {
         }
     }
 
-
     /**
      * Lager en fil med distansen fra startnodene til
      * alle landemerkene som man har definert

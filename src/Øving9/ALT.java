@@ -1,59 +1,25 @@
 package Øving9;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-/* Litt notater til oppgaven :)
-
-    Samme som A* bare at vi også tar i bruk Landemerker.
-
-    Landemerker:
-        - noder hvor vi beregner:
-            1. Avstand til alle noder (Dijkstra)
-            2. Avstand fra alle andre noder (Dijkstra på omv.graf)
-        - Må gjøre en preprossesering av kartet der vi lagrer dataene i en fil (hvordan skal det se ut?)
-        - bør ligge spredt rundt kanten på kartet??
-
-        ALT er bedre når man hele tiden har preprosseseringen.
-
-        3 - 8 landemerker.
-
-        Todo:
-            1. hvordan skal man velge landemerker? (burde være ytterst)
-            2. avstandsregnign
-            3. programmet skal vise hvor lang reiseruta er
-
-            noder:
-            number  longitude   latitude
-
-            kanter:
-            from    to  weight  ?   ?
-
-            interessepkt: (bruke for å finne nodenr til kjente kryss)
-            nodenr  kode    "Navn på stedet"
-
-            kode: 1 for stedsnavn eks "Trondheim", 2 for bensinstasjon eks "Shell Herlev"
-
-        nodenr samme som nr. i nodefila
-
-        Todo: finne ut hvordan filtype man skal lagre preprosseseringen i (CSV)
-
-
-
-             */
 
 public class ALT {
     public ArrayList<Node> nodes;
     public ArrayList<Edge> edges;
+
+    public ArrayList<int[]> toLandmarks = new ArrayList<>();
+    public ArrayList<int[]> fromLandmarks = new ArrayList<>();
 
 
 
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
+        //toLandmarks = new ArrayList<>();
+        //fromLandmarks = new ArrayList<>();
 
         readFile(nodeFile, edgeFile, inpktFile);
 
@@ -93,17 +59,15 @@ public class ALT {
         BufferedReader interessePkt = new BufferedReader(new FileReader(inpktFile));
         StringTokenizer stInpkt = new StringTokenizer(interessePkt.readLine());
 
-
-
-
         addNeigbours();
+        addOppoNeigbours();
     }
 
     /**
      * legger til alle nabo noder til nodene
      */
-    public void addNeigbours() {
-        for (Edge e: edges) {
+    private void addNeigbours() {
+        for (Edge e : edges) {
             // Fra noden til en enge
             Node n = e.getFrom();
             // Legger til edge i vedsiden av listen til node
@@ -113,10 +77,174 @@ public class ALT {
         }
     }
 
+    /**
+     * Får sjå om det funker
+     *
+     * @return
+     */
+    private void addOppoNeigbours() {
+        for (Edge e : edges) {
+            Node n = e.getTo();
+            n.addOppoNeigbour(e);
+        }
+    }
+
     // for å hente ut spesifik node fra en index
     public Node getNodeFromList(int index) {
         return nodes.get(index);
     }
 
 
+    /**
+     * Lager en fil med distansen fra startnodene til
+     * alle landemerkene som man har definert
+     * Todo: skal man bruke .csv eller .txt?? finner ut av det senere
+     */
+    public void generateFromNodeToLandmarkFile(int n, int s, int e, int w) throws IOException {
+        FileWriter fileWriter = new FileWriter("src/Øving9/Files/outfiles/from_node_to_landmark.txt");
+        PrintWriter pw = new PrintWriter(fileWriter);
+        Node north = nodes.get(n);
+        Node south = nodes.get(s);
+        Node east = nodes.get(e);
+        Node west = nodes.get(w);
+
+        Node[] landmarks = {north, south, east, west};
+
+        for (int i = 0; i < landmarks.length; i++) {
+            landmarks[i].setDistance(0);
+            int[] distances = findShortestDistanceFromAll(landmarks[i]);
+            toLandmarks.add(distances);
+        }
+
+        for (int j = 0; j < nodes.size(); j++) {
+            pw.write(toLandmarks.get(0)[j] + "," + toLandmarks.get(1)[j] + "," + toLandmarks.get(2)[j] + "," + toLandmarks.get(3)[j]);
+            pw.println(" ");
+        }
+    }
+
+
+    /**
+     * @throws FileNotFoundException
+     */
+    public void generateToNodeFromLandmarkFile(int n, int s, int e, int w) throws IOException {
+
+        FileWriter outFile = new FileWriter("src/Øving9/Files/outfiles/test.txt");
+        PrintWriter pw = new PrintWriter(outFile);
+
+        System.out.println("Størrelse på nodeliste: " + nodes.size());
+        Node north = nodes.get(n);
+        Node south = nodes.get(s);
+        Node east = nodes.get(e);
+        Node west = nodes.get(w);
+
+        Node[] landmarks = {north, south, east, west};
+
+        for (int i = 0; i < landmarks.length; i++) {
+            landmarks[i].setDistance(0);
+            int[] distances = findShortestDistanceToAll(landmarks[i]);
+            fromLandmarks.add(distances);
+        }
+
+        for (int j = 0; j < nodes.size(); j++) {
+            pw.write(fromLandmarks.get(0)[j] + "," + fromLandmarks.get(1)[j] + "," + fromLandmarks.get(2)[j] + "," + fromLandmarks.get(3)[j]);
+            pw.println(" ");
+        }
+    }
+
+    /**
+     * Trenger ikke denne, veldig rart!!
+     */
+    private void reset() {
+        for (Node node : nodes) {
+            node.setDistance(Integer.MAX_VALUE);
+            node.setVisisted(false);
+        }
+    }
+
+    /**
+     * @param start
+     */
+    private int[] findShortestDistanceToAll(Node start) {
+        reset();
+        start.setDistance(0); // start have cost 0
+
+        PriorityQueue<Node> queue = new PriorityQueue<>();
+
+        queue.add(start);
+        start.setVisisted(true);
+
+        while (!queue.isEmpty()) {
+
+            Node current = queue.poll();
+
+            for (Edge e : current.getAdjList()) {
+
+                Node n = e.getTo();
+
+                if (!n.isVisisted()) {
+                    int dist = current.getDistance() + e.getWeight();
+
+                    if (dist < n.getDistance()) {
+                        // remove from queue
+                        queue.remove(n);
+                        // update values
+                        n.setDistance(dist);
+                        n.setPredeseccor(current);
+                        // add to queue again with new values
+                        queue.add(n);
+                    }
+                }
+            }
+            current.setVisisted(true);
+        }
+        int[] distances = new int[nodes.size()];
+        for (int i = 0; i < nodes.size(); i++) {
+            distances[i] = nodes.get(i).getDistance();
+        }
+        return distances;
+    }
+
+
+    /**
+     * @param start
+     */
+    private int[] findShortestDistanceFromAll(Node start) {
+        reset();
+        start.setDistance(0); // start have cost 0
+
+        PriorityQueue<Node> queue = new PriorityQueue<>();
+
+        queue.add(start);
+        start.setVisisted(true);
+
+        while (!queue.isEmpty()) {
+
+            Node current = queue.poll();
+
+            for (Edge e : current.getOppositeAdjList()) {
+
+                Node n = e.getTo();
+
+                if (!n.isVisisted()) {
+                    int dist = current.getDistance() + e.getWeight();
+
+                    if (dist < n.getDistance()) {
+                        // remove from queue
+                        queue.remove(n);
+                        // update values
+                        n.setDistance(dist);
+                        n.setPredeseccor(current);
+                        // add to queue again with new values
+                        queue.add(n);
+                    }
+                }
+            }
+            current.setVisisted(true);
+        }
+        int[] distances = new int[nodes.size()];
+        for (int i = 0; i < nodes.size(); i++) {
+            distances[i] = nodes.get(i).getDistance();
+        }
+        return distances;
+    }
 }
