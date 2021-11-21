@@ -22,7 +22,6 @@ public class ALT {
         edges = new ArrayList<>();
 
         readFile(nodeFile, edgeFile, inpktFile);
-
         System.out.println("Antall noder: " + nodes.size());
         System.out.println("Antall kanter: " + edges.size());
     }
@@ -39,7 +38,6 @@ public class ALT {
         // Leser noder
         BufferedReader brNodes = new BufferedReader(new FileReader(nodeFile));
         StringTokenizer stNodes = new StringTokenizer(brNodes.readLine());
-
 
         int size = Integer.parseInt(stNodes.nextToken());
 
@@ -70,7 +68,7 @@ public class ALT {
 
         addNeigbours();
         addOppoNeigbours();
-    //    readLandmarkDistances();
+    //  readLandmarkDistances();
     }
 
     /**
@@ -124,8 +122,6 @@ public class ALT {
     }
 
 
-
-
     // liten test bare for å se at den lagrer distansene i fromLandmark eller toLandmark
     public void printLandmarks(int landmark, ArrayList<int[]> list) {
         if (landmark < 0 || landmark > 3) {
@@ -136,12 +132,6 @@ public class ALT {
             System.out.println(li[landmark]);
         }
     }
-
-
-    public void findShortestDistance(int startNode){
-
-    }
-
 
     /**
      * legger til alle nabo noder til nodene
@@ -159,7 +149,6 @@ public class ALT {
 
     /**
      * Får sjå om det funker
-     *
      * @return
      */
     private void addOppoNeigbours() {
@@ -205,12 +194,10 @@ public class ALT {
         }
     }
 
-
     /**
      * @throws FileNotFoundException
      */
     public void generateToNodeFromLandmarkFile(int n, int s, int e, int w) throws IOException {
-
         FileWriter outFile = new FileWriter("src/Øving9/Files/outfiles/from_landmark_to_node.txt");
         PrintWriter pw = new PrintWriter(outFile);
 
@@ -297,6 +284,7 @@ public class ALT {
 
     /**
      * @param start
+     * method from Dijkstra
      * Tar inn en startnode og finner avstand
      * fra node til start
      */
@@ -341,18 +329,27 @@ public class ALT {
     }
 
     /**
-     *
      * @return
-     *
      * D(node, mål) >= D(Landemerke, mål) - D(Landemerke, node)
-     *
-     *
      */
     public boolean distanceStartToEndGreater(Node start, Node end) {
         return false;
 
     }
 
+    // estimate distance from node n to target node
+    public int landmarkEstiame(int from, int to, int landmark) {
+        int landmarkToCurrent = fromLandmarks.get(landmark)[from];
+        int landmarkToTarget = fromLandmarks.get(landmark)[to];
 
+        int currentToLandmark = toLandmarks.get(landmark)[from];
+        int targetToLandmark = toLandmarks.get(landmark)[to];
 
+        // if negative calculation, set r1 and r2 to zero
+        int r1 = Math.max(landmarkToTarget - landmarkToCurrent, 0);
+        int r2 = Math.max(currentToLandmark - targetToLandmark, 0);
+
+        return Math.max(r1, r2);
+
+    }
 }
