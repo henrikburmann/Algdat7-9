@@ -27,6 +27,14 @@ public class ALT {
         System.out.println("Antall kanter: " + edges.size());
     }
 
+    public ArrayList<int[]> getToLandmarks() {
+        return toLandmarks;
+    }
+
+    public ArrayList<int[]> getFromLandmarks() {
+        return fromLandmarks;
+    }
+
     public void readFile(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         // Leser noder
         BufferedReader brNodes = new BufferedReader(new FileReader(nodeFile));
@@ -64,8 +72,13 @@ public class ALT {
         addOppoNeigbours();
     //    readLandmarkDistances();
     }
-    private void readLandmarkDistances() throws IOException{
-        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/test.txt"));
+
+    /**
+     * @throws IOException
+     * Read all distances from each landmark to every node
+     */
+    public void readFromLandmarks() throws IOException{
+        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/to_node_from_landmarks.txt"));
         StringTokenizer stToNode;
         for (int i = 0; i < 4; i++) {
             readFromLandmarks.add(new int[nodes.size()]);
@@ -74,14 +87,54 @@ public class ALT {
             stToNode = new StringTokenizer(bfToNode.readLine());
             for (int j = 0; j < 4; j++) {
                 readFromLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
+                int hei = readFromLandmarks.get(j)[i];
+                System.out.println(hei);
+
             }
         }
-
         int s = 0;
         for (int i = 0; i < 4; i++) {
             s += readtoLandmarks.get(i).length;
         }
-        System.out.println("Yooooo. Størrelsen på denne shiten er: " + s);
+    }
+
+    /**
+     * @throws IOException
+     * Read all distances to each landmark from every node
+     */
+    public void readToLandmarks() throws IOException{
+        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_node_to_landmarks.txt"));
+        StringTokenizer stToNode;
+        for (int i = 0; i < 4; i++) {
+            readFromLandmarks.add(new int[nodes.size()]);
+        }
+        for (int i = 0; i < nodes.size(); i++) {
+            stToNode = new StringTokenizer(bfToNode.readLine());
+            for (int j = 0; j < 4; j++) {
+                readFromLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
+                int hei = readFromLandmarks.get(j)[i];
+                System.out.println(hei);
+
+            }
+        }
+        int s = 0;
+        for (int i = 0; i < 4; i++) {
+            s += readtoLandmarks.get(i).length;
+        }
+    }
+
+
+
+
+    // liten test bare for å se at den lagrer distansene i fromLandmark eller toLandmark
+    public void printLandmarks(int landmark, ArrayList<int[]> list) {
+        if (landmark < 0 || landmark > 3) {
+            landmark = 0;
+        }
+        int[] li = list.get(landmark);
+        for (int i = 0; i < li.length ; i++) {
+            System.out.println(li[landmark]);
+        }
     }
 
 
@@ -128,7 +181,7 @@ public class ALT {
      * Todo: skal man bruke .csv eller .txt?? finner ut av det senere
      */
     public void generateFromNodeToLandmarkFile(int n, int s, int e, int w) throws IOException {
-        FileWriter fileWriter = new FileWriter("src/Øving9/Files/outfiles/from_node_to_landmark.txt");
+        FileWriter fileWriter = new FileWriter("src/Øving9/Files/outfiles/from_node_to_landmarks.txt");
         PrintWriter pw = new PrintWriter(fileWriter);
         Node north = nodes.get(n);
         Node south = nodes.get(s);
@@ -144,11 +197,11 @@ public class ALT {
         }
 
         for (int j = 0; j < nodes.size(); j++) {
-            pw.write(j + ": " + toLandmarks.get(0)[j] + " "
+            pw.write(toLandmarks.get(0)[j] + " "
                     + toLandmarks.get(1)[j] + " "
                     + toLandmarks.get(2)[j] + " "
                     + toLandmarks.get(3)[j]);
-            pw.println(" ");
+            pw.println();
         }
     }
 
@@ -158,7 +211,7 @@ public class ALT {
      */
     public void generateToNodeFromLandmarkFile(int n, int s, int e, int w) throws IOException {
 
-        FileWriter outFile = new FileWriter("src/Øving9/Files/outfiles/test.txt");
+        FileWriter outFile = new FileWriter("src/Øving9/Files/outfiles/from_landmark_to_node.txt");
         PrintWriter pw = new PrintWriter(outFile);
 
         System.out.println("Størrelse på nodeliste: " + nodes.size());
@@ -176,11 +229,11 @@ public class ALT {
         }
 
         for (int j = 0; j < nodes.size(); j++) {
-            pw.write(j+ ": " + fromLandmarks.get(0)[j] + " "
+            pw.write(fromLandmarks.get(0)[j] + " "
                     + fromLandmarks.get(1)[j] + " "
                     + fromLandmarks.get(2)[j] + " "
                     + fromLandmarks.get(3)[j]);
-            pw.println(" ");
+            pw.println();
         }
     }
 

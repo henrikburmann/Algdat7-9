@@ -7,7 +7,7 @@ import java.nio.file.Files;
 public class Main {
     public static void main(String[] args) throws IOException, IOException {
 
-        File test = new File("test.txt"); // fil som skal komprimeres
+        File test = new File("from_landmark_to_node.txt"); // fil som skal komprimeres
 
         File LZ77Comp = new File("compressed_test.txt"); // fil komprimert med lebel ziv
 
@@ -15,7 +15,7 @@ public class Main {
 
         File HuffmanDecomp = new File("huffmanDecomp" + // fil dekomprimert med huffman
                 ".txt");
-        File LZ77Decomp = new File("decompressed_test" + // fil decomprimert med lebel ziv, skal være lik test.txt
+        File LZ77Decomp = new File("decompressed_test" + // fil decomprimert med lebel ziv, skal være lik from_landmark_to_node.txt
                 ".txt");
 
         CompLZ77 compLZ77 = new CompLZ77(test, LZ77Comp);
