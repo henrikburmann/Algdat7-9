@@ -2,6 +2,7 @@ package Øving9;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -15,6 +16,8 @@ public class ALT {
 
     public ArrayList<int[]> readtoLandmarks = new ArrayList<>();
     public ArrayList<int[]> readFromLandmarks = new ArrayList<>();
+
+    private final PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator()); // se på denne litt mer
 
 
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
@@ -328,17 +331,9 @@ public class ALT {
         return distances;
     }
 
-    /**
-     * @return
-     * D(node, mål) >= D(Landemerke, mål) - D(Landemerke, node)
-     */
-    public boolean distanceStartToEndGreater(Node start, Node end) {
-        return false;
-
-    }
 
     // estimate distance from node n to target node
-    public int landmarkEstiame(int from, int to, int landmark) {
+    public int landmarkEstimate(int from, int to, int landmark) {
         int landmarkToCurrent = fromLandmarks.get(landmark)[from];
         int landmarkToTarget = fromLandmarks.get(landmark)[to];
 
@@ -350,6 +345,33 @@ public class ALT {
         int r2 = Math.max(currentToLandmark - targetToLandmark, 0);
 
         return Math.max(r1, r2);
+    }
 
+    public int findEstimate(int from, int to) {
+        int estimate = -1;
+        int tempEstimate = -1;
+        // lengde for landemerke 1 i preprosecced, alle landemerkene har uansett samme lengde, trur jeg??
+        int length = fromLandmarks.get(0).length;
+
+        for (int i = 0; i < length  ; i++) {
+            tempEstimate = landmarkEstimate(from, to, i); //
+            if (tempEstimate > estimate){
+                estimate = tempEstimate;
+            }
+        }
+        return estimate;
+    }
+
+
+    public int search() {
+        return -1;
+    }
+
+    // Ja må se på denne her litt senere
+    class DistanceComprator implements Comparator<Node> {
+        @Override
+        public int compare(Node o1, Node o2) {
+            return o1.getDistance() - o2.getDistance();
+        }
     }
 }
