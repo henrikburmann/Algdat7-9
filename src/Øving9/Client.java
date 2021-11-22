@@ -25,8 +25,7 @@ public class Client {
         //int til = 2951840; // Mehamn
 
         // leser av preprosecced
-        alt.readFromLandmarks();
-        alt.readToLandmarks();
+        alt.preprocess();
 
         // printer svar for ALT
         printAnswer(fra, til, alt);
@@ -53,7 +52,7 @@ public class Client {
         Interessepkt endInteresse = alt.getInteressepkt(end);
 
         int tid = alt.altSearch(start, end);
-        String time = omregnTilTimer((long) tid);
+        String time = omregnTilTimer(tid);
 
         System.out.println("tur: " + startIntresse.getName() + "-" + endInteresse.getName()
                 + ", startnode " + start + ", endnode " + end + ", Antall besøkte: " + alt.getAmountVisited() + ", " + time);

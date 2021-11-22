@@ -8,6 +8,9 @@ public class ALT {
     public ArrayList<Edge> edges;
     public ArrayList<Interessepkt> interessepkts;
 
+
+    Filehandler filehandler;
+
     public ArrayList<int[]> toLandmarks = new ArrayList<>();
     public ArrayList<int[]> fromLandmarks = new ArrayList<>();
 
@@ -18,13 +21,21 @@ public class ALT {
 
     private int amountVisited;
 
-
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
         interessepkts = new ArrayList<>();
 
-        readFile(nodeFile, edgeFile, inpktFile);
+        // Leser av filene til oppgaven
+        filehandler = new Filehandler(nodes, edges, interessepkts);
+
+        filehandler.readNodes(nodeFile);
+        filehandler.readEdges(edgeFile);
+        filehandler.readIntrestPoints(inpktFile);
+
+        // legger til nabo nodene til hver node
+        addNeigbours();
+        addOppoNeigbours();
 
         System.out.println("Antall noder: " + nodes.size());
         System.out.println("Antall kanter: " + edges.size());
@@ -32,112 +43,12 @@ public class ALT {
         priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator());
     }
 
-    public void readFile(String nodeFile, String edgeFile, String inpktFile) throws IOException {
-        // Leser noder
-        BufferedReader brNodes = new BufferedReader(new FileReader(nodeFile));
-        StringTokenizer stNodes = new StringTokenizer(brNodes.readLine());
-        int size = Integer.parseInt(stNodes.nextToken());
+    public void preprocess() throws IOException {
+        Preproseccor preproseccor = new Preproseccor(readtoLandmarks, readFromLandmarks, nodes);
 
-        for (int i = 0; i < size; i++) {
-            stNodes = new StringTokenizer(brNodes.readLine());
-            int number = Integer.parseInt(stNodes.nextToken());
-            double longitude = Double.parseDouble(stNodes.nextToken());
-            double latitude = Double.parseDouble(stNodes.nextToken());
-            nodes.add(new Node(number, longitude, latitude));
-        }
+        preproseccor.readFromLandmarks();
+        preproseccor.readToLandmarks();
 
-        // Leser kanter
-        BufferedReader brEdges = new BufferedReader(new FileReader(edgeFile));
-        StringTokenizer stEdges = new StringTokenizer(brEdges.readLine());
-        size = Integer.parseInt(stEdges.nextToken());
-
-        for (int i = 0; i < size; i++) {
-            stEdges = new StringTokenizer(brEdges.readLine());
-            Node from = nodes.get(Integer.parseInt(stEdges.nextToken()));
-            Node to = nodes.get(Integer.parseInt(stEdges.nextToken()));
-            int weight = Integer.parseInt(stEdges.nextToken());
-            edges.add(new Edge(from, to, weight));
-        }
-
-        // Leser interessepkt
-        BufferedReader brInteressepkt = new BufferedReader(new FileReader(inpktFile));
-        StringTokenizer stInteressepkt = new StringTokenizer(brInteressepkt.readLine());
-        int intressepktSize = Integer.parseInt(stInteressepkt.nextToken());
-
-        for (int i = 0; i < intressepktSize; i++) {
-            stInteressepkt = new StringTokenizer(brInteressepkt.readLine());
-            int nodeNumber = Integer.parseInt(stInteressepkt.nextToken());
-            int type = Integer.parseInt(stInteressepkt.nextToken());
-            String name = stInteressepkt.nextToken();
-
-            // legger til alle interessepktene
-            // todo: Må finne en måte å koble interessepkt opp mot
-            interessepkts.add(new Interessepkt(nodeNumber, type, name));
-
-        }
-
-        // legger til nabo nodene til hver node
-        addNeigbours();
-        addOppoNeigbours();
-    }
-
-    /**
-     * @throws IOException Read all distances from each landmark to every node
-     */
-    public void readFromLandmarks() throws IOException {
-        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_landmark_to_node.txt"));
-        StringTokenizer stToNode;
-        for (int i = 0; i < 4; i++) {
-            readFromLandmarks.add(new int[nodes.size()]);
-        }
-        for (int i = 0; i < nodes.size(); i++) {
-            stToNode = new StringTokenizer(bfToNode.readLine());
-
-            for (int j = 0; j < 4; j++) { // 4 landemerker, litt hardkodet
-                if (!stToNode.hasMoreTokens()) {
-                    break;
-                }
-                String token = stToNode.nextToken();
-                readFromLandmarks.get(j)[i] = Integer.parseInt(token);
-            }
-        }
-        bfToNode.close();
-
-        int s = 0;
-        for (int i = 0; i < 4; i++) {
-            s += readFromLandmarks.get(i).length;
-        }
-        System.out.println("Antall ting og sånn er: " + s);
-    }
-
-    /**
-     * @throws IOException Read all distances to each landmark from every node
-     */
-    public void readToLandmarks() throws IOException {
-        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_node_to_landmarks.txt"));
-        StringTokenizer stToNode = null;
-
-        for (int i = 0; i < 4; i++) { // 4 landemerker, litt hardkodet
-            readtoLandmarks.add(new int[nodes.size()]);
-        }
-        for (int i = 0; i < nodes.size(); i++) {
-            String next = bfToNode.readLine().trim();
-            if (next.isEmpty()) {
-                bfToNode.close();
-            } else {
-                stToNode = new StringTokenizer(next);
-            }
-
-            for (int j = 0; j < 4; j++) {
-                readtoLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
-            }
-        }
-        bfToNode.close();
-        int s = 0;
-        for (int i = 0; i < 4; i++) {
-            s += readtoLandmarks.get(i).length;
-        }
-        System.out.println("Antall ting og sånn er til landemerkene: " + s);
     }
 
     /**
