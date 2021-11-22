@@ -76,28 +76,6 @@ public class ALT {
     //  readLandmarkDistances();
     }
 
-    /*public void shortestDistance(int startNode, int endNode){
-        Node n = nodes.get(startNode);
-        priorityQueue.add(n);
-        n.setVisisted(true);
-        int nodesVisited = 0;
-
-        while(!priorityQueue.isEmpty()){
-            Node polled = priorityQueue.poll();
-            polled.setVisisted(true);
-            nodesVisited ++;
-            if (polled == nodes.get(endNode)){
-                System.out.println("Antall noder besøkt: " + nodesVisited);
-                return;
-            }
-            for (Edge e: polled.getAdjList()){
-                int estimate1 = landmarkEstimate(startNode, endNode, land)
-                //if ()
-            }
-
-        }
-    }*/
-
     /**
      * @throws IOException
      * Read all distances from each landmark to every node
@@ -370,7 +348,6 @@ public class ALT {
         return distances;
     }
 
-
     // estimate distance from node n to target node
     public int landmarkEstimate(int from, int to, int landmark) {
         int landmarkToCurrent = readFromLandmarks.get(landmark)[from];
@@ -389,8 +366,7 @@ public class ALT {
     public int findEstimate(int from, int to) {
         int estimate = -1;
         int tempEstimate = -1;
-        // lengde for landemerke 1 i preprosecced, alle landemerkene har uansett samme lengde, trur jeg??
-        int length = 4;
+        int length = 4; // hardkodet, avhengig av hvor mye landemerker som brukes
 
         for (int i = 0; i < length; i++) {
             tempEstimate = landmarkEstimate(from, to, i); // landmark
