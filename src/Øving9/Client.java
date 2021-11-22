@@ -32,16 +32,16 @@ public class Client {
 
 
         //Kjører så Djikstra algoritme
+        System.out.println("\n\n========== Dijkstra ==============");
         Djikstra d = new Djikstra(nodePath, edgePath);
+
         d.findShortestDistance(d.getNodeFromList(fra), d.getNodeFromList(til));
         // Printer ut distansen fra startnoden øverst
 
         System.out.println("\nDistanse fra node " + fra + " til " + til + " = " + d.getNodeFromList(til).getDistance());
 
+        // printer ut rekkefølge av nodene som er kortest vei
         System.out.println("Korteste vei fra Trondheim til Oslo: " + d.getShortestPath(d.getNodeFromList(til)));
-
-        // printer ut kortest path i form av node nummer.
-        System.out.println(d.getShortestPath(d.getNodeFromList(til)));
 
     }
 
@@ -64,9 +64,7 @@ public class Client {
         for (int i = 0; i < koordinater.size(); i++) {
             System.out.println(koordinater.get(i));
         }
-
-         */
-
+        */
     }
 
     public static int omregnTilHundredel(int timer, int minutter, int sekunder) {

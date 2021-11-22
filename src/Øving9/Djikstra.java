@@ -107,22 +107,20 @@ public class Djikstra {
     }
 
     //Går fra endenoden til startnoden for å finne veien som ble gått.
-    public List<String> getShortestPath(Node target) {
+    public List<Node> getShortestPath(Node target) {
         List<Node> reversedPath = new ArrayList<>();
-        //Finner veien i reversert rekkefølge
+        //Bactracer fra end node til startnode
         for (Node n = target; n != null; n = n.getPredeseccor() ) {
-            reversedPath.add(n);
+            reversedPath.add(n); // legger til i reversert rekkefølge
         }
         //Reverserer den reverserte veien for å få den riktig retning.
         List<Node> path = new ArrayList<>();
         for (int i = reversedPath.size() - 1; i >= 0 ; i--) {
             path.add(reversedPath.get(i));
         }
-        System.out.println("Djikstra: Antall noder i pathen: " + path.size());
-        List<String> coordinates = new ArrayList<>();
-        for (int i = 0; i < path.size(); i++) {
-            coordinates.add(path.get(i).writeCoordinates());
-        }
-        return coordinates;
+
+        Collections.reverse(reversedPath); // snur om listen
+
+        return reversedPath;
     }
 }
