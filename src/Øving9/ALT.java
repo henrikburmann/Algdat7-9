@@ -17,7 +17,7 @@ public class ALT {
     public ArrayList<int[]> readtoLandmarks = new ArrayList<>();
     public ArrayList<int[]> readFromLandmarks = new ArrayList<>();
 
-    // private final PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator()); // se på denne litt mer
+    private final PriorityQueue<Node> priorityQueue;
 
 
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
@@ -27,6 +27,8 @@ public class ALT {
         readFile(nodeFile, edgeFile, inpktFile);
         System.out.println("Antall noder: " + nodes.size());
         System.out.println("Antall kanter: " + edges.size());
+
+        priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator());
     }
 
     public ArrayList<int[]> getToLandmarks() {
@@ -73,6 +75,28 @@ public class ALT {
         addOppoNeigbours();
     //  readLandmarkDistances();
     }
+
+    /*public void shortestDistance(int startNode, int endNode){
+        Node n = nodes.get(startNode);
+        priorityQueue.add(n);
+        n.setVisisted(true);
+        int nodesVisited = 0;
+
+        while(!priorityQueue.isEmpty()){
+            Node polled = priorityQueue.poll();
+            polled.setVisisted(true);
+            nodesVisited ++;
+            if (polled == nodes.get(endNode)){
+                System.out.println("Antall noder besøkt: " + nodesVisited);
+                return;
+            }
+            for (Edge e: polled.getAdjList()){
+                int estimate1 = landmarkEstimate(startNode, endNode, land)
+                //if ()
+            }
+
+        }
+    }*/
 
     /**
      * @throws IOException
@@ -349,11 +373,11 @@ public class ALT {
 
     // estimate distance from node n to target node
     public int landmarkEstimate(int from, int to, int landmark) {
-        int landmarkToCurrent = fromLandmarks.get(landmark)[from];
-        int landmarkToTarget = fromLandmarks.get(landmark)[to];
+        int landmarkToCurrent = readFromLandmarks.get(landmark)[from];
+        int landmarkToTarget = readFromLandmarks.get(landmark)[to];
 
-        int currentToLandmark = toLandmarks.get(landmark)[from];
-        int targetToLandmark = toLandmarks.get(landmark)[to];
+        int currentToLandmark = readtoLandmarks.get(landmark)[from];
+        int targetToLandmark = readtoLandmarks.get(landmark)[to];
 
         // if negative calculation, set r1 and r2 to zero
         int r1 = Math.max(landmarkToTarget - landmarkToCurrent, 0);
@@ -366,10 +390,10 @@ public class ALT {
         int estimate = -1;
         int tempEstimate = -1;
         // lengde for landemerke 1 i preprosecced, alle landemerkene har uansett samme lengde, trur jeg??
-        int length = fromLandmarks.get(0).length;
+        int length = 4;
 
-        for (int i = 0; i < length  ; i++) {
-            tempEstimate = landmarkEstimate(from, to, i); //
+        for (int i = 0; i < length; i++) {
+            tempEstimate = landmarkEstimate(from, to, i); // landmark
             if (tempEstimate > estimate){
                 estimate = tempEstimate;
             }
@@ -378,15 +402,67 @@ public class ALT {
     }
 
 
-    public int search() {
-        return -1;
+    public long search(int startNode, int endNode) {
+        priorityQueue.clear();
+        reset();
+        int besøkt = 0;
+        Node start = getNodeFromList(startNode);
+        Node end = getNodeFromList(endNode);
+        start.setDistance(0);
+        priorityQueue.add(start);
+
+        while (!priorityQueue.isEmpty()) {
+
+            Node polled = priorityQueue.poll();
+            besøkt ++;
+            polled.setVisisted(true);
+            polled.setEnQueued(false);
+            /*
+            if (polled.equals(endNode)) {
+                return; // we have reached the end
+            }
+             */
+
+            for (Edge edge: polled.getAdjList()) {
+                Node toNode = edge.getTo();
+                int newDistance = polled.getDistance() + edge.getWeight();
+
+                if (newDistance < toNode.getDistance()) {
+                    toNode.setDistance(newDistance);
+                    toNode.setPredeseccor(polled); // set forgjenger
+                    if (!toNode.isVisisted()) {
+                        priorityQueue.remove(toNode);
+
+                        if (toNode.getEstimatedDistance() == -1) {
+                            int estimate = findEstimate(toNode.number, end.number);
+                            toNode.setEstimatedDistance(estimate);
+                        }
+                        priorityQueue.add(toNode);
+                        toNode.setEnQueued(true);
+                    }
+                }
+
+                if (!toNode.isVisisted() && !toNode.isEnQueued()) {
+                    priorityQueue.add(toNode);
+                    toNode.setEnQueued(true);
+                }
+
+            }
+
+            if (end.isVisisted()) {
+                System.out.println("Antall besøkte: " + besøkt);
+                break;
+            }
+        }
+        // distance from start to endnode
+        return end.getDistance();
     }
 
-    // Ja må se på denne her litt senere
     class DistanceComprator implements Comparator<Node> {
         @Override
         public int compare(Node o1, Node o2) {
-            return o1.getDistance() - o2.getDistance();
+            // o1.findsumDistance, o2.findSumDistance
+            return o1.sumDistance() - o2.sumDistance();
         }
     }
 }

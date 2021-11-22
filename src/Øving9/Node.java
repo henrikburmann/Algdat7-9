@@ -13,6 +13,8 @@ public class Node implements Comparable<Node> {
     private Node predeseccor;
     private List<Edge> adjList;
     private List<Edge> oppositeAdjList;
+    private int estimatedDistance = -1;
+    private boolean enQueued;
 
     //Konstruktør for bruk av ALT
     public Node(int number, double longitude, double latitude){
@@ -34,14 +36,6 @@ public class Node implements Comparable<Node> {
 
     public void setDistance(int distance) {
         this.distance = distance;
-    }
-
-    public int incrementValue(int add) {
-        if (this.distance == Integer.MAX_VALUE) {
-            distance = 0;
-        }
-        distance += add;
-        return distance;
     }
 
     //Converts degrees to radians.
@@ -86,6 +80,26 @@ public class Node implements Comparable<Node> {
 
     public void setAdjList(List<Edge> adjList) {
         this.adjList = adjList;
+    }
+
+    public void setEstimatedDistance(int estimatedDistance) {
+        this.estimatedDistance = estimatedDistance;
+    }
+
+    public int getEstimatedDistance() {
+        return estimatedDistance;
+    }
+
+    public boolean isEnQueued() {
+        return enQueued;
+    }
+
+    public void setEnQueued(boolean enQueued) {
+        this.enQueued = enQueued;
+    }
+
+    public int sumDistance() {
+        return distance + estimatedDistance;
     }
 
     @Override
