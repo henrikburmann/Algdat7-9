@@ -12,9 +12,15 @@ public class Client {
         // Kjører ALT algoritme
         ALT alt = new ALT(nodePath, edgePath, intressepktPath);
 
-        // preprocess filer, trenger ikke å kjøre disse hver gang
-        alt.generateFromNodeToLandmarkFile(5263302,2313313, 708400, 5486883);
-        alt.generateToNodeFromLandmarkFile(5263302,2313313, 708400, 5486883);
+
+        alt.preprocess(
+                "src/Øving9/Files/outfiles/from_node_to_landmarks.txt",
+                "src/Øving9/Files/outfiles/from_landmark_to_node.txt",
+
+                5263302,2313313, 708400, 5486883
+                );
+
+
 
         int fra = 6861306; // Trondheim
         //int fra = 3447384; // Stavanger
@@ -24,25 +30,24 @@ public class Client {
         //int til = 136963; // Tampere
         //int til = 2951840; // Mehamn
 
-        // leser av preprosecced
-        alt.readFromLandmarks();
-        alt.readToLandmarks();
+        // leser av preprosecced data
+        alt.readNodeLandmarkData();
 
         // printer svar for ALT
         printAnswer(fra, til, alt);
 
 
         //Kjører så Djikstra algoritme
+        System.out.println("\n\n========== Dijkstra ==============");
         Djikstra d = new Djikstra(nodePath, edgePath);
+
         d.findShortestDistance(d.getNodeFromList(fra), d.getNodeFromList(til));
         // Printer ut distansen fra startnoden øverst
 
         System.out.println("\nDistanse fra node " + fra + " til " + til + " = " + d.getNodeFromList(til).getDistance());
 
-        System.out.println("Korteste vei fra Trondheim til Oslo: " + d.getShortestPath(d.getNodeFromList(til)));
-
-        // printer ut kortest path i form av node nummer.
-        System.out.println(d.getShortestPath(d.getNodeFromList(til)));
+        // printer ut rekkefølge av nodene som er kortest vei
+        // System.out.println("Korteste vei fra Trondheim til Oslo: " + d.getShortestPath(d.getNodeFromList(til)));
 
     }
 
@@ -53,7 +58,7 @@ public class Client {
         Interessepkt endInteresse = alt.getInteressepkt(end);
 
         int tid = alt.altSearch(start, end);
-        String time = omregnTilTimer((long) tid);
+        String time = omregnTilTimer(tid);
 
         System.out.println("tur: " + startIntresse.getName() + "-" + endInteresse.getName()
                 + ", startnode " + start + ", endnode " + end + ", Antall besøkte: " + alt.getAmountVisited() + ", " + time);
@@ -65,9 +70,7 @@ public class Client {
         for (int i = 0; i < koordinater.size(); i++) {
             System.out.println(koordinater.get(i));
         }
-
-         */
-
+        */
     }
 
     public static int omregnTilHundredel(int timer, int minutter, int sekunder) {

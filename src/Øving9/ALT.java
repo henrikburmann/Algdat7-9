@@ -8,6 +8,10 @@ public class ALT {
     public ArrayList<Edge> edges;
     public ArrayList<Interessepkt> interessepkts;
 
+
+    Filehandler filehandler;
+    Preproseccor preproseccor;
+
     public ArrayList<int[]> toLandmarks = new ArrayList<>();
     public ArrayList<int[]> fromLandmarks = new ArrayList<>();
 
@@ -18,13 +22,23 @@ public class ALT {
 
     private int amountVisited;
 
-
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
         interessepkts = new ArrayList<>();
 
-        readFile(nodeFile, edgeFile, inpktFile);
+        // Leser av filene til oppgaven
+        filehandler = new Filehandler(nodes, edges, interessepkts);
+
+        filehandler.readNodes(nodeFile);
+        filehandler.readEdges(edgeFile);
+        filehandler.readIntrestPoints(inpktFile);
+
+
+
+        // legger til nabo nodene til hver node
+        addNeigbours();
+        addOppoNeigbours();
 
         System.out.println("Antall noder: " + nodes.size());
         System.out.println("Antall kanter: " + edges.size());
@@ -32,112 +46,11 @@ public class ALT {
         priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator());
     }
 
-    public void readFile(String nodeFile, String edgeFile, String inpktFile) throws IOException {
-        // Leser noder
-        BufferedReader brNodes = new BufferedReader(new FileReader(nodeFile));
-        StringTokenizer stNodes = new StringTokenizer(brNodes.readLine());
-        int size = Integer.parseInt(stNodes.nextToken());
+    public void readNodeLandmarkData() throws IOException {
 
-        for (int i = 0; i < size; i++) {
-            stNodes = new StringTokenizer(brNodes.readLine());
-            int number = Integer.parseInt(stNodes.nextToken());
-            double longitude = Double.parseDouble(stNodes.nextToken());
-            double latitude = Double.parseDouble(stNodes.nextToken());
-            nodes.add(new Node(number, longitude, latitude));
-        }
+        filehandler.readFromLandmarks("src/Øving9/Files/outfiles/from_landmark_to_node.txt", readFromLandmarks);
+        filehandler.readToLandmarks("src/Øving9/Files/outfiles/from_node_to_landmarks.txt", readtoLandmarks);
 
-        // Leser kanter
-        BufferedReader brEdges = new BufferedReader(new FileReader(edgeFile));
-        StringTokenizer stEdges = new StringTokenizer(brEdges.readLine());
-        size = Integer.parseInt(stEdges.nextToken());
-
-        for (int i = 0; i < size; i++) {
-            stEdges = new StringTokenizer(brEdges.readLine());
-            Node from = nodes.get(Integer.parseInt(stEdges.nextToken()));
-            Node to = nodes.get(Integer.parseInt(stEdges.nextToken()));
-            int weight = Integer.parseInt(stEdges.nextToken());
-            edges.add(new Edge(from, to, weight));
-        }
-
-        // Leser interessepkt
-        BufferedReader brInteressepkt = new BufferedReader(new FileReader(inpktFile));
-        StringTokenizer stInteressepkt = new StringTokenizer(brInteressepkt.readLine());
-        int intressepktSize = Integer.parseInt(stInteressepkt.nextToken());
-
-        for (int i = 0; i < intressepktSize; i++) {
-            stInteressepkt = new StringTokenizer(brInteressepkt.readLine());
-            int nodeNumber = Integer.parseInt(stInteressepkt.nextToken());
-            int type = Integer.parseInt(stInteressepkt.nextToken());
-            String name = stInteressepkt.nextToken();
-
-            // legger til alle interessepktene
-            // todo: Må finne en måte å koble interessepkt opp mot
-            interessepkts.add(new Interessepkt(nodeNumber, type, name));
-
-        }
-
-        // legger til nabo nodene til hver node
-        addNeigbours();
-        addOppoNeigbours();
-    }
-
-    /**
-     * @throws IOException Read all distances from each landmark to every node
-     */
-    public void readFromLandmarks() throws IOException {
-        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_landmark_to_node.txt"));
-        StringTokenizer stToNode;
-        for (int i = 0; i < 4; i++) {
-            readFromLandmarks.add(new int[nodes.size()]);
-        }
-        for (int i = 0; i < nodes.size(); i++) {
-            stToNode = new StringTokenizer(bfToNode.readLine());
-
-            for (int j = 0; j < 4; j++) { // 4 landemerker, litt hardkodet
-                if (!stToNode.hasMoreTokens()) {
-                    break;
-                }
-                String token = stToNode.nextToken();
-                readFromLandmarks.get(j)[i] = Integer.parseInt(token);
-            }
-        }
-        bfToNode.close();
-
-        int s = 0;
-        for (int i = 0; i < 4; i++) {
-            s += readFromLandmarks.get(i).length;
-        }
-        System.out.println("Antall ting og sånn er: " + s);
-    }
-
-    /**
-     * @throws IOException Read all distances to each landmark from every node
-     */
-    public void readToLandmarks() throws IOException {
-        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_node_to_landmarks.txt"));
-        StringTokenizer stToNode = null;
-
-        for (int i = 0; i < 4; i++) { // 4 landemerker, litt hardkodet
-            readtoLandmarks.add(new int[nodes.size()]);
-        }
-        for (int i = 0; i < nodes.size(); i++) {
-            String next = bfToNode.readLine().trim();
-            if (next.isEmpty()) {
-                bfToNode.close();
-            } else {
-                stToNode = new StringTokenizer(next);
-            }
-
-            for (int j = 0; j < 4; j++) {
-                readtoLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
-            }
-        }
-        bfToNode.close();
-        int s = 0;
-        for (int i = 0; i < 4; i++) {
-            s += readtoLandmarks.get(i).length;
-        }
-        System.out.println("Antall ting og sånn er til landemerkene: " + s);
     }
 
     /**
@@ -176,66 +89,12 @@ public class ALT {
         return amountVisited;
     }
 
-    /**
-     * Lager en fil med distansen fra startnodene
-     * til alle landemerkene
-     */
-    public void generateFromNodeToLandmarkFile(int n, int s, int e, int w) throws IOException {
-        FileWriter fileWriter = new FileWriter("src/Øving9/Files/outfiles/from_node_to_landmarks.txt");
-        PrintWriter pw = new PrintWriter(fileWriter);
-        Node north = nodes.get(n);
-        Node south = nodes.get(s);
-        Node east = nodes.get(e);
-        Node west = nodes.get(w);
-
-        Node[] landmarks = {north, south, east, west};
-
-        for (int i = 0; i < landmarks.length; i++) {
-            landmarks[i].setDistance(0);
-            int[] distances = findShortestDistanceFromAll(landmarks[i]);
-            toLandmarks.add(distances);
-        }
-        for (int j = 0; j < nodes.size(); j++) {
-            pw.write(toLandmarks.get(0)[j] + " "
-                    + toLandmarks.get(1)[j] + " "
-                    + toLandmarks.get(2)[j] + " "
-                    + toLandmarks.get(3)[j]);
-            pw.println();
-        }
-        pw.close();
+    public void preprocess(String fromNodeToLandmarkFile, String toNodeFromLandmarkFile, int n, int s, int e, int w) throws IOException {
+        preproseccor = new Preproseccor(nodes, toLandmarks, fromLandmarks, fromNodeToLandmarkFile, toNodeFromLandmarkFile);
+        preproseccor.generateFromNodeToLandmarkFile(n,s,e,w);
+        preproseccor.generateToNodeFromLandmarkFile(n,s,e,w);
     }
 
-    /**
-     * @throws FileNotFoundException
-     * Lager en fil med distansen til startnode
-     * fra alle landemerkene
-     */
-    public void generateToNodeFromLandmarkFile(int n, int s, int e, int w) throws IOException {
-        FileWriter outFile = new FileWriter("src/Øving9/Files/outfiles/from_landmark_to_node.txt");
-        PrintWriter pw = new PrintWriter(outFile);
-
-        System.out.println("Størrelse på nodeliste: " + nodes.size());
-        Node north = nodes.get(n);
-        Node south = nodes.get(s);
-        Node east = nodes.get(e);
-        Node west = nodes.get(w);
-
-        Node[] landmarks = {north, south, east, west};
-
-        for (int i = 0; i < landmarks.length; i++) {
-            landmarks[i].setDistance(0);
-            int[] distances = findShortestDistanceToAll(landmarks[i]);
-            fromLandmarks.add(distances);
-        }
-        for (int j = 0; j < nodes.size(); j++) {
-            pw.write(fromLandmarks.get(0)[j] + " "
-                    + fromLandmarks.get(1)[j] + " "
-                    + fromLandmarks.get(2)[j] + " "
-                    + fromLandmarks.get(3)[j]);
-            pw.println();
-        }
-        pw.close();
-    }
 
     /**
      * trenger å resette data for nodene hver gang
@@ -247,96 +106,6 @@ public class ALT {
             node.setDistance(Integer.MAX_VALUE);
             node.setVisisted(false);
         }
-    }
-
-    /**
-     * @param start Tar inn en startnode og finner avstand
-     *              til node fra start
-     */
-    private int[] findShortestDistanceToAll(Node start) {
-        reset();
-        start.setDistance(0); // start have cost 0
-
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-
-        queue.add(start);
-        start.setVisisted(true);
-
-        while (!queue.isEmpty()) {
-
-            Node current = queue.poll();
-
-            for (Edge e : current.getAdjList()) {
-
-                Node n = e.getTo();
-
-                if (!n.isVisisted()) {
-                    int dist = current.getDistance() + e.getWeight();
-
-                    if (dist < n.getDistance()) {
-                        // remove from queue
-                        queue.remove(n);
-                        // update values
-                        n.setDistance(dist);
-                        n.setPredeseccor(current);
-                        // add to queue again with new values
-                        queue.add(n);
-                    }
-                }
-            }
-            current.setVisisted(true);
-        }
-        int[] distances = new int[nodes.size()];
-        for (int i = 0; i < nodes.size(); i++) {
-            distances[i] = nodes.get(i).getDistance();
-        }
-        return distances;
-    }
-
-
-    /**
-     * @param start method from Dijkstra
-     * Tar inn en startnode og finner avstand
-     * fra node til start
-     */
-    private int[] findShortestDistanceFromAll(Node start) {
-        reset();
-        start.setDistance(0); // start have cost 0
-
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-
-        queue.add(start);
-        start.setVisisted(true);
-
-        while (!queue.isEmpty()) {
-
-            Node current = queue.poll();
-
-            for (Edge e : current.getOppositeAdjList()) {
-
-                Node n = e.getFrom();
-
-                if (!n.isVisisted()) {
-                    int dist = current.getDistance() + e.getWeight();
-
-                    if (dist < n.getDistance()) {
-                        // remove from queue
-                        queue.remove(n);
-                        // update values
-                        n.setDistance(dist);
-                        n.setPredeseccor(current);
-                        // add to queue again with new values
-                        queue.add(n);
-                    }
-                }
-            }
-            current.setVisisted(true);
-        }
-        int[] distances = new int[nodes.size()];
-        for (int i = 0; i < nodes.size(); i++) {
-            distances[i] = nodes.get(i).getDistance();
-        }
-        return distances;
     }
 
     //
