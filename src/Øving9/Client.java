@@ -16,6 +16,14 @@ public class Client {
         //alt.generateFromNodeToLandmarkFile(5263302,2313313, 708400, 5486883);
         //alt.generateToNodeFromLandmarkFile(5263302,2313313, 708400, 5486883);
 
+        alt.preprocess(
+                "src/Øving9/Files/outfiles/from_landmark_to_node.txt",
+                "src/Øving9/Files/outfiles/from_node_to_landmarks.txt",
+                5263302,2313313, 708400, 5486883
+                );
+
+
+
         int fra = 6861306; // Trondheim
         //int fra = 3447384; // Stavanger
         //int fra = 5379848; // Snåsa
