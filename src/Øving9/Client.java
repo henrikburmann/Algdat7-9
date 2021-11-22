@@ -17,8 +17,9 @@ public class Client {
         //alt.generateToNodeFromLandmarkFile(5263302,2313313, 708400, 5486883);
 
         alt.preprocess(
-                "src/Øving9/Files/outfiles/from_landmark_to_node.txt",
                 "src/Øving9/Files/outfiles/from_node_to_landmarks.txt",
+                "src/Øving9/Files/outfiles/from_landmark_to_node.txt",
+
                 5263302,2313313, 708400, 5486883
                 );
 
