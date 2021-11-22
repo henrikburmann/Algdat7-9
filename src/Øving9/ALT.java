@@ -17,7 +17,7 @@ public class ALT {
     public ArrayList<int[]> readtoLandmarks = new ArrayList<>();
     public ArrayList<int[]> readFromLandmarks = new ArrayList<>();
 
-    private final PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator()); // se på denne litt mer
+    // private final PriorityQueue<Node> priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator()); // se på denne litt mer
 
 
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
@@ -79,24 +79,31 @@ public class ALT {
      * Read all distances from each landmark to every node
      */
     public void readFromLandmarks() throws IOException{
-        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/to_node_from_landmarks.txt"));
-        StringTokenizer stToNode;
+        BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_landmark_to_node.txt"));
+        StringTokenizer stToNode = null;
         for (int i = 0; i < 4; i++) {
             readFromLandmarks.add(new int[nodes.size()]);
         }
         for (int i = 0; i < nodes.size(); i++) {
+            // må finne en måte å se om man kan lese neste linje
             stToNode = new StringTokenizer(bfToNode.readLine());
-            for (int j = 0; j < 4; j++) {
-                readFromLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
-                int hei = readFromLandmarks.get(j)[i];
-                System.out.println(hei);
 
+            for (int j = 0; j < 4; j++) {
+
+                if (!stToNode.hasMoreTokens()) {
+                    break;
+                }
+                String token = stToNode.nextToken();
+                readFromLandmarks.get(j)[i] = Integer.parseInt(token);
             }
         }
+        bfToNode.close();
+
         int s = 0;
         for (int i = 0; i < 4; i++) {
-            s += readtoLandmarks.get(i).length;
+            s += readFromLandmarks.get(i).length;
         }
+        System.out.println("Antall ting og sånn er: " + s);
     }
 
     /**
@@ -105,23 +112,29 @@ public class ALT {
      */
     public void readToLandmarks() throws IOException{
         BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_node_to_landmarks.txt"));
-        StringTokenizer stToNode;
+        StringTokenizer stToNode = null;
         for (int i = 0; i < 4; i++) {
-            readFromLandmarks.add(new int[nodes.size()]);
+            readtoLandmarks.add(new int[nodes.size()]);
         }
-        for (int i = 0; i < nodes.size(); i++) {
-            stToNode = new StringTokenizer(bfToNode.readLine());
-            for (int j = 0; j < 4; j++) {
-                readFromLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
-                int hei = readFromLandmarks.get(j)[i];
-                System.out.println(hei);
+        for (int i =  0; i < nodes.size(); i++) {
+            // ikke riktig størrelse
+            String next = bfToNode.readLine().trim();
+            if (next.isEmpty()) {
+                bfToNode.close();
+            } else {
+                stToNode = new StringTokenizer(next);
+            }
 
+            for (int j = 0; j < 4; j++) {
+                readtoLandmarks.get(j)[i] = Integer.parseInt(stToNode.nextToken());
             }
         }
+        bfToNode.close();
         int s = 0;
         for (int i = 0; i < 4; i++) {
             s += readtoLandmarks.get(i).length;
         }
+        System.out.println("Antall ting og sånn er til landemerkene: " + s);
     }
 
 
@@ -195,6 +208,7 @@ public class ALT {
                     + toLandmarks.get(3)[j]);
             pw.println();
         }
+        pw.close();
     }
 
     /**
@@ -225,6 +239,7 @@ public class ALT {
                     + fromLandmarks.get(3)[j]);
             pw.println();
         }
+        pw.close();
     }
 
     /**

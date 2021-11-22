@@ -15,10 +15,10 @@ public class Client {
                 "src/Øving9/Files/Oppg/interessepkt.txt");
 
 
-        // lat.readFromLandmarks();
+        lat.readFromLandmarks();
         lat.readToLandmarks();
 
-        lat.printLandmarks(0, lat.getToLandmarks());
+        //lat.printLandmarks(0, lat.getToLandmarks());
 
         //lat.generateToNodeFromLandmarkFile(5263302,2313313, 708400, 5486883);
         //lat.generateFromNodeToLandmarkFile(5263302,2313313, 708400, 5486883);
