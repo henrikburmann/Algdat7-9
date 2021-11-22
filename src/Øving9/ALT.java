@@ -1,15 +1,12 @@
 package Øving9;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
-
+import java.util.*;
 
 public class ALT {
     public ArrayList<Node> nodes;
     public ArrayList<Edge> edges;
+    public ArrayList<Interessepkt> interessepkts;
 
     public ArrayList<int[]> toLandmarks = new ArrayList<>();
     public ArrayList<int[]> fromLandmarks = new ArrayList<>();
@@ -19,12 +16,16 @@ public class ALT {
 
     private final PriorityQueue<Node> priorityQueue;
 
+    private int amountVisited;
+
 
     public ALT(String nodeFile, String edgeFile, String inpktFile) throws IOException {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
+        interessepkts = new ArrayList<>();
 
         readFile(nodeFile, edgeFile, inpktFile);
+
         System.out.println("Antall noder: " + nodes.size());
         System.out.println("Antall kanter: " + edges.size());
 
@@ -66,21 +67,32 @@ public class ALT {
             edges.add(new Edge(from, to, weight));
         }
 
-        // leser fil som består av interessepunkter
-        // todo: fullføre denne senere
-        BufferedReader interessePkt = new BufferedReader(new FileReader(inpktFile));
-        StringTokenizer stInpkt = new StringTokenizer(interessePkt.readLine());
+        // leser interessepkt
+        BufferedReader brInteressepkt = new BufferedReader(new FileReader(inpktFile));
+        StringTokenizer stInteressepkt = new StringTokenizer(brInteressepkt.readLine());
+        int intressepktSize = Integer.parseInt(stInteressepkt.nextToken());
+
+        for (int i = 0; i < intressepktSize; i++) {
+            stInteressepkt = new StringTokenizer(brInteressepkt.readLine());
+            int nodeNumber = Integer.parseInt(stInteressepkt.nextToken());
+            int type = Integer.parseInt(stInteressepkt.nextToken());
+            String name = stInteressepkt.nextToken();
+
+            // legger til alle interessepktene
+            // todo: Må finne en måte å koble interessepkt opp mot
+            interessepkts.add(new Interessepkt(nodeNumber, type, name));
+
+        }
 
         addNeigbours();
         addOppoNeigbours();
-    //  readLandmarkDistances();
+        //  readLandmarkDistances();
     }
 
     /**
-     * @throws IOException
-     * Read all distances from each landmark to every node
+     * @throws IOException Read all distances from each landmark to every node
      */
-    public void readFromLandmarks() throws IOException{
+    public void readFromLandmarks() throws IOException {
         BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_landmark_to_node.txt"));
         StringTokenizer stToNode = null;
         for (int i = 0; i < 4; i++) {
@@ -109,16 +121,15 @@ public class ALT {
     }
 
     /**
-     * @throws IOException
-     * Read all distances to each landmark from every node
+     * @throws IOException Read all distances to each landmark from every node
      */
-    public void readToLandmarks() throws IOException{
+    public void readToLandmarks() throws IOException {
         BufferedReader bfToNode = new BufferedReader(new FileReader("src/Øving9/Files/outfiles/from_node_to_landmarks.txt"));
         StringTokenizer stToNode = null;
         for (int i = 0; i < 4; i++) {
             readtoLandmarks.add(new int[nodes.size()]);
         }
-        for (int i =  0; i < nodes.size(); i++) {
+        for (int i = 0; i < nodes.size(); i++) {
             // ikke riktig størrelse
             String next = bfToNode.readLine().trim();
             if (next.isEmpty()) {
@@ -146,7 +157,7 @@ public class ALT {
             landmark = 0;
         }
         int[] li = list.get(landmark);
-        for (int i = 0; i < li.length ; i++) {
+        for (int i = 0; i < li.length; i++) {
             System.out.println(li[landmark]);
         }
     }
@@ -166,7 +177,9 @@ public class ALT {
     }
 
     /**
-     * Får sjå om det funker
+     * Legger naboer til node
+     * når man skal bruke reverse graph
+     *
      * @return
      */
     private void addOppoNeigbours() {
@@ -181,11 +194,13 @@ public class ALT {
         return nodes.get(index);
     }
 
+    public int getAmountVisited() {
+        return amountVisited;
+    }
 
     /**
      * Lager en fil med distansen fra startnodene til
      * alle landemerkene som man har definert
-     * Todo: skal man bruke .csv eller .txt?? finner ut av det senere
      */
     public void generateFromNodeToLandmarkFile(int n, int s, int e, int w) throws IOException {
         FileWriter fileWriter = new FileWriter("src/Øving9/Files/outfiles/from_node_to_landmarks.txt");
@@ -257,9 +272,8 @@ public class ALT {
     }
 
     /**
-     * @param start
-     * Tar inn en startnode og finner avstand
-     * til node fra start
+     * @param start Tar inn en startnode og finner avstand
+     *              til node fra start
      */
     private int[] findShortestDistanceToAll(Node start) {
         reset();
@@ -303,10 +317,9 @@ public class ALT {
 
 
     /**
-     * @param start
-     * method from Dijkstra
-     * Tar inn en startnode og finner avstand
-     * fra node til start
+     * @param start method from Dijkstra
+     *              Tar inn en startnode og finner avstand
+     *              fra node til start
      */
     private int[] findShortestDistanceFromAll(Node start) {
         reset();
@@ -348,7 +361,7 @@ public class ALT {
         return distances;
     }
 
-    // estimate distance from node n to target node
+    //
     public int landmarkEstimate(int from, int to, int landmark) {
         int landmarkToCurrent = readFromLandmarks.get(landmark)[from];
         int landmarkToTarget = readFromLandmarks.get(landmark)[to];
@@ -363,6 +376,7 @@ public class ALT {
         return Math.max(r1, r2);
     }
 
+
     public int findEstimate(int from, int to) {
         int estimate = -1;
         int tempEstimate = -1;
@@ -370,7 +384,7 @@ public class ALT {
 
         for (int i = 0; i < length; i++) {
             tempEstimate = landmarkEstimate(from, to, i); // landmark
-            if (tempEstimate > estimate){
+            if (tempEstimate > estimate) {
                 estimate = tempEstimate;
             }
         }
@@ -378,10 +392,16 @@ public class ALT {
     }
 
 
-    public long search(int startNode, int endNode) {
+    /**
+     * @param startNode
+     * @param endNode
+     * @return distance from startnode to endnode
+     * ALT search (djikstra with landmarks)
+     */
+    public int search(int startNode, int endNode) {
         priorityQueue.clear();
         reset();
-        int besøkt = 0;
+        amountVisited = 0;
         Node start = getNodeFromList(startNode);
         Node end = getNodeFromList(endNode);
         start.setDistance(0);
@@ -390,7 +410,7 @@ public class ALT {
         while (!priorityQueue.isEmpty()) {
 
             Node polled = priorityQueue.poll();
-            besøkt ++;
+            amountVisited++;
             polled.setVisisted(true);
             polled.setEnQueued(false);
             /*
@@ -399,7 +419,7 @@ public class ALT {
             }
              */
 
-            for (Edge edge: polled.getAdjList()) {
+            for (Edge edge : polled.getAdjList()) {
                 Node toNode = edge.getTo();
                 int newDistance = polled.getDistance() + edge.getWeight();
 
@@ -426,12 +446,31 @@ public class ALT {
             }
 
             if (end.isVisisted()) {
-                System.out.println("Antall besøkte: " + besøkt);
+                System.out.println("Antall besøkte: " + amountVisited);
                 break;
             }
         }
         // distance from start to endnode
         return end.getDistance();
+    }
+
+    public List<String> getPath(Node target) {
+        List<Node> reversedPath = new ArrayList<>();
+        //Finner veien i reversert rekkefølge
+        for (Node n = target; n != null; n = n.getPredeseccor()) {
+            reversedPath.add(n);
+        }
+        //Reverserer den reverserte veien for å få den riktig retning.
+        List<Node> path = new ArrayList<>();
+        for (int i = reversedPath.size() - 1; i >= 0; i--) {
+            path.add(reversedPath.get(i));
+        }
+        System.out.println("ALT: Antall noder i pathen: " + path.size());
+        List<String> koordinater = new ArrayList<>();
+        for (int i = 0; i < path.size(); i++) {
+            koordinater.add(path.get(i).writeCoordinates());
+        }
+        return koordinater;
     }
 
     class DistanceComprator implements Comparator<Node> {
@@ -440,5 +479,15 @@ public class ALT {
             // o1.findsumDistance, o2.findSumDistance
             return o1.sumDistance() - o2.sumDistance();
         }
+    }
+
+    // henter ut interessepkt basert på nodenummer
+    public Interessepkt getInteressepkt(int number) {
+        for (int i = 0; i < interessepkts.size() ; i++) {
+            if (interessepkts.get(i).getNodeNumber() == number) {
+                return interessepkts.get(i);
+            }
+        }
+        return null;
     }
 }
