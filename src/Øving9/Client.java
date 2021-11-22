@@ -13,8 +13,8 @@ public class Client {
         ALT alt = new ALT(nodePath, edgePath, intressepktPath);
 
         // preprocess filer, trenger ikke å kjøre disse hver gang
-        //alt.generateFromNodeToLandmarkFile(5263302,2313313, 708400, 5486883);
-        //alt.generateToNodeFromLandmarkFile(5263302,2313313, 708400, 5486883);
+        alt.generateFromNodeToLandmarkFile(5263302,2313313, 708400, 5486883);
+        alt.generateToNodeFromLandmarkFile(5263302,2313313, 708400, 5486883);
 
         int fra = 6861306; // Trondheim
         //int fra = 3447384; // Stavanger
