@@ -24,8 +24,8 @@ public class Client {
         //int til = 136963; // Tampere
         //int til = 2951840; // Mehamn
 
-        // leser av preprosecced
-        alt.preprocess();
+        // leser av preprosecced data
+        alt.readNodeLandmarkData();
 
         // printer svar for ALT
         printAnswer(fra, til, alt);
@@ -41,7 +41,7 @@ public class Client {
         System.out.println("\nDistanse fra node " + fra + " til " + til + " = " + d.getNodeFromList(til).getDistance());
 
         // printer ut rekkefølge av nodene som er kortest vei
-        System.out.println("Korteste vei fra Trondheim til Oslo: " + d.getShortestPath(d.getNodeFromList(til)));
+        // System.out.println("Korteste vei fra Trondheim til Oslo: " + d.getShortestPath(d.getNodeFromList(til)));
 
     }
 

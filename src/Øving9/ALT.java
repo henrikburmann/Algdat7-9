@@ -43,11 +43,10 @@ public class ALT {
         priorityQueue = new PriorityQueue<>(nodes.size(), new DistanceComprator());
     }
 
-    public void preprocess() throws IOException {
-        Preproseccor preproseccor = new Preproseccor(readtoLandmarks, readFromLandmarks, nodes);
+    public void readNodeLandmarkData() throws IOException {
 
-        preproseccor.readFromLandmarks();
-        preproseccor.readToLandmarks();
+        filehandler.readFromLandmarks("src/Øving9/Files/outfiles/from_landmark_to_node.txt", readFromLandmarks);
+        filehandler.readToLandmarks("src/Øving9/Files/outfiles/from_node_to_landmarks.txt", readtoLandmarks);
 
     }
 
