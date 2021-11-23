@@ -13,9 +13,22 @@ public class Filehandler {
     private ArrayList<Interessepkt> interessepkts;
 
     public Filehandler(ArrayList<Node> nodes, ArrayList<Edge> edges, ArrayList<Interessepkt> interessepkts) {
+
         this.nodes = nodes;
         this.edges = edges;
         this.interessepkts = interessepkts;
+    }
+
+    public ArrayList<Node> getNodes() {
+        return nodes;
+    }
+
+    public ArrayList<Edge> getEdges() {
+        return edges;
+    }
+
+    public ArrayList<Interessepkt> getInteressepkts() {
+        return interessepkts;
     }
 
     public void readNodes(String nodePath) {
@@ -115,7 +128,7 @@ public class Filehandler {
             readtoLandmarks.add(new int[nodes.size()]);
         }
         for (int i = 0; i < nodes.size(); i++) {
-            String next = bfToNode.readLine().trim();
+            String next = bfToNode.readLine();
             if (next.isEmpty()) {
                 bfToNode.close();
             } else {

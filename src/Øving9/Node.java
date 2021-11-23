@@ -8,13 +8,15 @@ public class Node implements Comparable<Node> {
     double longitude; //Lengdegrad
     double latitude; //Breddegrad
     private int distance;
-
+    private int type;
     private boolean visisted;
     private Node predeseccor;
     private List<Edge> adjList;
     private List<Edge> oppositeAdjList;
     private int estimatedDistance = -1;
     private boolean enQueued;
+
+    private Interessepkt interessepkt;
 
     //Konstruktør for bruk av ALT
     public Node(int number, double longitude, double latitude){
@@ -34,6 +36,12 @@ public class Node implements Comparable<Node> {
         this.adjList = new ArrayList<>();
     }
 
+
+    public void setType(int type){
+        this.type = type;
+    }
+
+    public int getType(){return type;}
     public void setDistance(int distance) {
         this.distance = distance;
     }

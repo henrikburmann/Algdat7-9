@@ -34,8 +34,6 @@ public class ALT {
         filehandler.readEdges(edgeFile);
         filehandler.readIntrestPoints(inpktFile);
 
-
-
         // legger til nabo nodene til hver node
         addNeigbours();
         addOppoNeigbours();

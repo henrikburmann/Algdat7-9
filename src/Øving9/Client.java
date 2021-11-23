@@ -1,9 +1,11 @@
 package Øving9;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Client {
     public static void main(String[] args) throws IOException {
+
 
         String nodePath = "src/Øving9/Files/Oppg/noder.txt";
         String edgePath = "src/Øving9/Files/Oppg/kanter.txt";
@@ -12,15 +14,14 @@ public class Client {
         // Kjører ALT algoritme
         ALT alt = new ALT(nodePath, edgePath, intressepktPath);
 
-
+        /*
         alt.preprocess(
                 "src/Øving9/Files/outfiles/from_node_to_landmarks.txt",
                 "src/Øving9/Files/outfiles/from_landmark_to_node.txt",
-
                 5263302,2313313, 708400, 5486883
                 );
 
-
+         */
 
         int fra = 6861306; // Trondheim
         //int fra = 3447384; // Stavanger
@@ -38,13 +39,22 @@ public class Client {
 
 
         //Kjører så Djikstra algoritme
-        System.out.println("\n\n========== Dijkstra ==============");
-        Djikstra d = new Djikstra(nodePath, edgePath);
+        System.out.println("\n========== Dijkstra ==============");
+        Djikstra d = new Djikstra(nodePath, edgePath, intressepktPath);
 
         d.findShortestDistance(d.getNodeFromList(fra), d.getNodeFromList(til));
         // Printer ut distansen fra startnoden øverst
 
         System.out.println("\nDistanse fra node " + fra + " til " + til + " = " + d.getNodeFromList(til).getDistance());
+
+        List<Node> steder = d.xNearestGasStations(6590451, 10, 2);
+
+        System.out.println("size of steder: " + steder.size() + " skal være 10");
+
+        System.out.println("Bensinsstasjoner: \n ------------");
+        for (int i = 0; i < steder.size(); i++) {
+            System.out.println(steder.get(i).writeCoordinates());
+        }
 
         // printer ut rekkefølge av nodene som er kortest vei
         // System.out.println("Korteste vei fra Trondheim til Oslo: " + d.getShortestPath(d.getNodeFromList(til)));
